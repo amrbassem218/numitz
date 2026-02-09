@@ -1,8 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
-export default function GraphCalculator() {
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+interface props {
+  expressions: any;
+  setExpressions: Dispatch<SetStateAction<any>>;
+}
+export default function GraphCalculator({
+  expressions,
+  setExpressions,
+}: props) {
   const calculatorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,6 +24,24 @@ export default function GraphCalculator() {
         expressions: true,
         settingsMenu: true,
       });
+      if (expressions) {
+        calculator.setExpressions(expressions);
+      }
+      calculator.observe("expressions", () => {
+        console.log("heyyy");
+        setExpressions(calculator.getExpressions());
+      });
+
+      let prevExp: any = null;
+      setInterval(() => {
+        const curExp = calculator.getExpressions();
+        console.log("prevExp:", prevExp);
+        console.log("curExp: ", curExp);
+        if (curExp != prevExp) {
+          prevExp = curExp;
+          setExpressions(prevExp);
+        }
+      }, 500);
     };
 
     document.body.appendChild(script);
@@ -27,6 +51,9 @@ export default function GraphCalculator() {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("expressions: ", expressions);
+  }, [expressions]);
   return (
     <div ref={calculatorRef} className="w-full h-full rounded-lg border" />
   );

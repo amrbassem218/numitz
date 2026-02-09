@@ -29,6 +29,7 @@ import ContestNotFound from "./contest_404";
 import ContestError from "./contest_error";
 import { useShownProblemId } from "@/app/store";
 import ContestStandings from "./standings";
+import ScientificCalc from "@/components/Contest/scientificCalc";
 
 export default function Page() {
   const isMobile = useIsMobile();
@@ -62,7 +63,7 @@ export default function Page() {
   const [bottomBarActiveTab, setBottomBarActiveTab] = useState("submissions");
   const [rightBarActiveTab, setRightBarActiveTab] =
     useState("problemStatement");
-
+  const [expressions, setExpressions] = useState<any>(null);
   useEffect(() => {
     const fetchContest = async () => {
       try {
@@ -75,7 +76,7 @@ export default function Page() {
         console.error("Error fetching contest:", err);
         setError(
           err.response?.data?.message ||
-          "Failed to load contest. Please try again.",
+            "Failed to load contest. Please try again.",
         );
       } finally {
         setLoading(false);
@@ -106,7 +107,7 @@ export default function Page() {
         console.error("Error fetching problems:", err);
         setError(
           err.response?.data?.message ||
-          "Failed to load problems. Please try again.",
+            "Failed to load problems. Please try again.",
         );
       }
     };
@@ -181,8 +182,9 @@ export default function Page() {
 
       {/* Problems List Screen for phones */}
       <div
-        className={`fixed top-0 left-0 bg-background px-4 rounded-2xl w-full mb-4 flex flex-col justify-center items-center gap-3 h-screen duration-150 ${isMobile && showLevels ? "opacity-100 z-10" : "opacity-0 -z-10"
-          }`}
+        className={`fixed top-0 left-0 bg-background px-4 rounded-2xl w-full mb-4 flex flex-col justify-center items-center gap-3 h-screen duration-150 ${
+          isMobile && showLevels ? "opacity-100 z-10" : "opacity-0 -z-10"
+        }`}
       >
         <h2 className="font-semibold text-center mb-2 flex justify-center items-center gap-2">
           <Gauge size={25} strokeWidth={3} className="text-primary" /> Levels
@@ -240,20 +242,17 @@ export default function Page() {
                       </TabsList>
 
                       {/* Problems */}
-                      {
-                        leftBarActiveTab == "problems" &&
+                      {leftBarActiveTab == "problems" && (
                         <ContestProblems
                           contest={contest}
                           problems={problems}
                           problemsStatus={problemsStatus}
                         />
-                      }
+                      )}
 
-                      {
-                        leftBarActiveTab == "standings" &&
+                      {leftBarActiveTab == "standings" && (
                         <ContestStandings contestId={contest.id} />
-                      }
-
+                      )}
                     </Tabs>
                   </div>
                   <ScrollBar />
@@ -302,8 +301,16 @@ export default function Page() {
                     setProblemsStatus={setProblemsStatus}
                     problemsStatus={problemsStatus}
                   />
+
                   <TabsContent value="graphingCalculator">
-                    <GraphCalculator />
+                    <GraphCalculator
+                      expressions={expressions}
+                      setExpressions={setExpressions}
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="scientificCalculator">
+                    <ScientificCalc />
                   </TabsContent>
                 </Tabs>
               </section>
@@ -340,8 +347,7 @@ export default function Page() {
                       </Fragment>
                     ))}
                   </TabsList>
-                  <ContestSubmissions
-                  />
+                  <ContestSubmissions />
                 </Tabs>
               </section>
             </ResizablePanel>

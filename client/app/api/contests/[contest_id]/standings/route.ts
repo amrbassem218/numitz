@@ -11,21 +11,18 @@ export async function GET(
     const { data: standings, error } = await supabase
       .from("standings")
       .select("*, profiles(username)")
-      // .eq("contest_id", contestId);
+    // .eq("contest_id", contestId);
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
     }
-    console.log("contest_id: ", contestId);
-    console.log("standings_before: ", standings)
     standings.sort((a: Standing, b: Standing) => {
       const a_score = a?.score ?? 0;
       const b_score = b?.score ?? 0
       return b_score - a_score;
     })
-    console.log("standings_after: ", standings)
     return new Response(JSON.stringify(standings), {
       status: 200,
       headers: { "Content-Type": "application/json" },
