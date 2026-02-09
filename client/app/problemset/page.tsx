@@ -1,7 +1,14 @@
+"use client";
 import { Button } from "@/components/ui/button";
-
+import { Separator } from "@/components/ui/separator";
+import { Fragment, useEffect, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { IoFolderOpen } from "react-icons/io5";
+import { IoExtensionPuzzle } from "react-icons/io5";
+import { FaGraduationCap } from "react-icons/fa";
+import { useProfile } from "../store";
+import { FaRegUserCircle } from "react-icons/fa";
 export default function LearningDashboard() {
-  
   const problems = [
     { title: "Euclidean Theory", solved: "80.67%", diff: "Easy" },
     { title: "Pythagoras Game", solved: "80.23%", diff: "Med." },
@@ -17,28 +24,89 @@ export default function LearningDashboard() {
     { name: "Kangaroo", participants: "345" },
     { name: "Shabola", participants: "341" },
   ];
-
+  const activeTabs = [
+    {
+      value: "library",
+      label: "Library",
+      icon: IoFolderOpen,
+    },
+    {
+      value: "challenges",
+      label: "Challenges",
+      icon: IoExtensionPuzzle,
+      announcementExists: true,
+      announcement: {
+        name: "New",
+        colorStyling: "bg-primary text-text",
+      },
+    },
+    {
+      value: "courses",
+      label: "Courses",
+      icon: FaGraduationCap,
+    },
+  ];
+  const [activeMainTab, setActiveMainTab] = useState<string>(
+    activeTabs[0].value,
+  );
+  const user = useProfile((state) => state.user);
   return (
-    <main className="max-w-full min-h-screen mt-22 flex px-2">
-      <aside className="bg-card px-6 py-7 hidden xl:block">
-        <h2 className="text-[20px] font-semibold mb-10">Library</h2>
+    <main className="max-w-full mt-22 flex px-0 grid grid-cols-24">
+      <aside className="bg-background hidden xl:block col-span-4 border-r border-foreground/20 px-2">
+        <div className="flex w-full ">
+          <Tabs
+            defaultValue="problems"
+            className="w-full"
+            value={activeMainTab}
+            onValueChange={setActiveMainTab}
+          >
+            <TabsList className="flex flex-col gap-2 w-full h-40 justify-start rounded-b-none bg-transparent gap-0">
+              {activeTabs.map((tab) => (
+                <Fragment key={tab.value}>
+                  <TabsTrigger
+                    value={tab.value}
+                    className={`w-full h-15 rounded-md  px-4 flex items-center justify-start flex justify-between  ${activeMainTab == tab.value ? "bg-bg-light font-semibold" : "bg-transparent opacity-90 font-thin!"}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <tab.icon className="text-text w-4 h-4" />
+                      <h2 className="hidden md:inline text-base xl:text-md">
+                        {tab.label}
+                      </h2>
+                    </div>
+                    {tab?.announcementExists && (
+                      <div
+                        className={`px-4 py-1 rounded-lg flex items justify-between ${tab.announcement.colorStyling}`}
+                      >
+                        <span> {tab.announcement.name}</span>
+                      </div>
+                    )}
+                  </TabsTrigger>
+                </Fragment>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
 
-        <ul className="space-y-5 text-[15px]">
-          <li className="flex items-center gap-3 font-medium">
-            <span className="w-0.75 h-4 bg-blue-500 rounded-full" />
-            Challenges
-          </li>
-          <li className="pl-6 text-gray-400">Our Courses</li>
-        </ul>
+        <div className=" flex overflow-hidden my-4 mx-4">
+          <Separator className="bg-foreground/20" />
+        </div>
 
-        <p className="text-[13px] text-gray-500 mt-12 leading-relaxed">
-          Log in to view lists and track study progress
-        </p>
+        {/* If user is not signed in prompt them to */}
+        {user && (
+          <section className="w-3/4 mx-auto flex flex-col gap-2 items-center">
+            <p className="text-md text-text font-extralight leading-relaxed text-center">
+              Log in to view lists and track study progress
+            </p>
 
-        <Button className="mt-4 w-full" link="/sign_in">Log In</Button>
+            <Button className="bg-text text-bg rounded-lg" link="/sign_in">
+              <FaRegUserCircle />
+              Log In
+            </Button>
+          </section>
+        )}
       </aside>
 
-      <section className="flex-1 px-6 py-6">
+      <section className=" flex-1 px-6 py-6 col-span-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
           <div className="bg-linear-to-br from-gray-100 to-gray-200 text-black rounded-2xl p-6 flex flex-col justify-between">
             <div>
@@ -109,20 +177,20 @@ export default function LearningDashboard() {
             </div>
           ))}
         </div>
+
+        <div className=" flex overflow-hidden">
+          <Separator orientation="vertical" className="bg-foreground/20" />
+        </div>
       </section>
 
-      <aside className="bg-card p-6 hidden xl:block">
+      <aside className="bg-background p-6 hidden xl:block col-span-4">
         <h3 className="font-semibold mb-4 text-[15px]">Weekly Premium</h3>
         <div className="grid grid-cols-5 gap-2 mb-10">
           {["W1", "W2", "W3", "W4", "W5"].map((w, i) => (
             <div
               key={w}
               className={`p-3 rounded-xl text-center text-sm font-medium
-                  ${
-                    i === 1
-                      ? "bg-blue-600 text-white"
-                      : "bg-card "
-                  }`}
+                  ${i === 1 ? "bg-blue-600 text-white" : "bg-card "}`}
             >
               {w}
             </div>
