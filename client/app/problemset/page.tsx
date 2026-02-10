@@ -8,15 +8,74 @@ import { IoExtensionPuzzle } from "react-icons/io5";
 import { FaGraduationCap } from "react-icons/fa";
 import { useProfile } from "../store";
 import { FaRegUserCircle } from "react-icons/fa";
+import { DataTable } from "./data_table";
+import { columns } from "./columns";
 export default function LearningDashboard() {
   const problems = [
-    { title: "Euclidean Theory", solved: "80.67%", diff: "Easy" },
-    { title: "Pythagoras Game", solved: "80.23%", diff: "Med." },
-    { title: "Newton and rough planes", solved: "97.45%", diff: "Hard" },
-    { title: "Einstein fights Newton", solved: "23.56%", diff: "Med." },
-    { title: "Einstein the flash", solved: "12.63%", diff: "Easy" },
-    { title: "Plank and his constant", solved: "74.05%", diff: "Med." },
-    { title: "Gojo's infinity limit", solved: "21.32%", diff: "Hard" },
+    {
+      id: "sdflka",
+      name: "23. Euclidean Theory",
+      precentage_solved: 84.2,
+      difficulty: "Hard",
+      topics: [
+        "calc ||",
+        "Algebra",
+        "Geomtry",
+        "calc ||",
+        "Algebra",
+        "Geomtry",
+      ],
+    },
+    {
+      id: "sdflka",
+      name: "23. Euclidean Theory",
+      precentage_solved: 84.2,
+      difficulty: "Hard",
+      topics: [
+        "calc ||",
+        "Algebra",
+        "Geomtry",
+        "calc ||",
+        "Algebra",
+        "Geomtry",
+      ],
+    },
+    {
+      id: "sdflka",
+      name: "23. Euclidean Theory",
+      precentage_solved: 84.2,
+      difficulty: "Hard",
+      topics: [
+        "calc ||",
+        "Algebra",
+        "Geomtry",
+        "calc ||",
+        "Algebra",
+        "Geomtry",
+      ],
+    },
+    {
+      id: "sdflka",
+      name: "23. Euclidean Theory",
+      precentage_solved: 84.2,
+      difficulty: "Hard",
+
+      topics: [
+        "calc ||",
+        "Algebra",
+        "Geomtry",
+        "calc ||",
+        "Algebra",
+        "Geomtry",
+      ],
+    },
+    // { title: "Euclidean Theory", solved: "80.67%", diff: "Easy" },
+    // { title: "Pythagoras Game", solved: "80.23%", diff: "Med." },
+    // { title: "Newton and rough planes", solved: "97.45%", diff: "Hard" },
+    // { title: "Einstein fights Newton", solved: "23.56%", diff: "Med." },
+    // { title: "Einstein the flash", solved: "12.63%", diff: "Easy" },
+    // { title: "Plank and his constant", solved: "74.05%", diff: "Med." },
+    // { title: "Gojo's infinity limit", solved: "21.32%", diff: "Hard" },
   ];
 
   const trendingCompetitions = [
@@ -51,8 +110,9 @@ export default function LearningDashboard() {
   );
   const user = useProfile((state) => state.user);
   return (
-    <main className="max-w-full mt-22 flex px-0 grid grid-cols-24">
-      <aside className="bg-background hidden xl:block col-span-4 border-r border-foreground/20 px-2">
+    <main className="max-w-full mt-22 flex px-0 grid grid-cols-24 bg-bg">
+      {/* Left side bar */}
+      <aside className="bg-bg hidden xl:block col-span-4 max-w-60 border-r border-foreground/20 px-2">
         <div className="flex w-full ">
           <Tabs
             defaultValue="problems"
@@ -92,7 +152,7 @@ export default function LearningDashboard() {
         </div>
 
         {/* If user is not signed in prompt them to */}
-        {user && (
+        {!user && (
           <section className="w-3/4 mx-auto flex flex-col gap-2 items-center">
             <p className="text-md text-text font-extralight leading-relaxed text-center">
               Log in to view lists and track study progress
@@ -106,7 +166,9 @@ export default function LearningDashboard() {
         )}
       </aside>
 
-      <section className=" flex-1 px-6 py-6 col-span-16">
+      {/* Main section */}
+      <section className="px-6 py-6 col-span-16 w-full max-w-270 mx-auto">
+        {/* Suggested problemsets (ads) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
           <div className="bg-linear-to-br from-gray-100 to-gray-200 text-black rounded-2xl p-6 flex flex-col justify-between">
             <div>
@@ -145,37 +207,34 @@ export default function LearningDashboard() {
           </div>
         </div>
 
-        <div className="mb-4">
-          <h3 className="text-[18px] font-medium">Search questions</h3>
-        </div>
-
         <div className="space-y-1.5">
-          {problems.map((p, i) => (
-            <div
-              key={i}
-              className="flex items-center justify-between bg-card px-6 py-3.5 rounded-xl hover:bg-background transition-colors"
-            >
-              <div className="flex items-center gap-6">
-                <span className="text-gray-500 w-6">{i + 1}.</span>
-                <span className="text-[15px]">{p.title}</span>
-              </div>
-
-              <div className="flex items-center gap-6 text-[13px]">
-                <span className="text-gray-500">{p.solved}</span>
-                <span
-                  className={
-                    p.diff === "Easy"
-                      ? "text-green-400 bg-green-400/10 px-3 py-1 rounded-full"
-                      : p.diff === "Med."
-                        ? "text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full"
-                        : "text-red-400 bg-red-400/10 px-3 py-1 rounded-full"
-                  }
-                >
-                  {p.diff}
-                </span>
-              </div>
-            </div>
-          ))}
+          <DataTable columns={columns} data={problems} />
+          {/* {problems.map((p, i) => ( */}
+          {/*   <div */}
+          {/*     key={i} */}
+          {/*     className="flex items-center justify-between bg-card px-6 py-3.5 rounded-xl hover:bg-background transition-colors" */}
+          {/*   > */}
+          {/*     <div className="flex items-center gap-6"> */}
+          {/*       <span className="text-gray-500 w-6">{i + 1}.</span> */}
+          {/*       <span className="text-[15px]">{p.title}</span> */}
+          {/*     </div> */}
+          {/**/}
+          {/*     <div className="flex items-center gap-6 text-[13px]"> */}
+          {/*       <span className="text-gray-500">{p.solved}</span> */}
+          {/*       <span */}
+          {/*         className={ */}
+          {/*           p.diff === "Easy" */}
+          {/*             ? "text-green-400 bg-green-400/10 px-3 py-1 rounded-full" */}
+          {/*             : p.diff === "Med." */}
+          {/*               ? "text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full" */}
+          {/*               : "text-red-400 bg-red-400/10 px-3 py-1 rounded-full" */}
+          {/*         } */}
+          {/*       > */}
+          {/*         {p.diff} */}
+          {/*       </span> */}
+          {/*     </div> */}
+          {/*   </div> */}
+          {/* ))} */}
         </div>
 
         <div className=" flex overflow-hidden">
@@ -183,7 +242,8 @@ export default function LearningDashboard() {
         </div>
       </section>
 
-      <aside className="bg-background p-6 hidden xl:block col-span-4">
+      {/* Right side bar */}
+      <aside className="bg-bg p-6 hidden xl:block col-span-4 max-w-70 justify-self-end mx-2">
         <h3 className="font-semibold mb-4 text-[15px]">Weekly Premium</h3>
         <div className="grid grid-cols-5 gap-2 mb-10">
           {["W1", "W2", "W3", "W4", "W5"].map((w, i) => (
