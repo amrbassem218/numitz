@@ -13,8 +13,8 @@ import { columns } from "./columns";
 export default function LearningDashboard() {
   const problems = [
     {
-      id: "sdflka",
-      name: "23. Euclidean Theory",
+      id: "2412D",
+      name: "Euclidean Theory",
       precentage_solved: 84.2,
       difficulty: "Hard",
       topics: [
@@ -27,10 +27,10 @@ export default function LearningDashboard() {
       ],
     },
     {
-      id: "sdflka",
-      name: "23. Euclidean Theory",
+      id: "412C",
+      name: "Pythagoras Game",
       precentage_solved: 84.2,
-      difficulty: "Hard",
+      difficulty: "medium",
       topics: [
         "calc ||",
         "Algebra",
@@ -41,10 +41,10 @@ export default function LearningDashboard() {
       ],
     },
     {
-      id: "sdflka",
-      name: "23. Euclidean Theory",
+      id: "712A",
+      name: "Newton and rough planes",
       precentage_solved: 84.2,
-      difficulty: "Hard",
+      difficulty: "Easy",
       topics: [
         "calc ||",
         "Algebra",
@@ -55,8 +55,8 @@ export default function LearningDashboard() {
       ],
     },
     {
-      id: "sdflka",
-      name: "23. Euclidean Theory",
+      id: "412C",
+      name: "Einstein fights Newton",
       precentage_solved: 84.2,
       difficulty: "Hard",
 
@@ -72,7 +72,7 @@ export default function LearningDashboard() {
     // { title: "Euclidean Theory", solved: "80.67%", diff: "Easy" },
     // { title: "Pythagoras Game", solved: "80.23%", diff: "Med." },
     // { title: "Newton and rough planes", solved: "97.45%", diff: "Hard" },
-    // { title: "Einstein fights Newton", solved: "23.56%", diff: "Med." },
+    // { title: "Einstein fights Newton", solved: "56%", diff: "Med." },
     // { title: "Einstein the flash", solved: "12.63%", diff: "Easy" },
     // { title: "Plank and his constant", solved: "74.05%", diff: "Med." },
     // { title: "Gojo's infinity limit", solved: "21.32%", diff: "Hard" },
@@ -125,7 +125,7 @@ export default function LearningDashboard() {
                 <Fragment key={tab.value}>
                   <TabsTrigger
                     value={tab.value}
-                    className={`w-full h-15 rounded-md  px-4 flex items-center justify-start flex justify-between  ${activeMainTab == tab.value ? "bg-bg-light font-semibold" : "bg-transparent opacity-90 font-thin!"}`}
+                    className={`w-full h-15 rounded-sm px-4 flex items-center justify-start flex justify-between  ${activeMainTab == tab.value ? "bg-muted-foreground/20! font-semibold" : "bg-transparent opacity-90 font-thin!"}`}
                   >
                     <div className="flex items-center gap-2">
                       <tab.icon className="text-text w-4 h-4" />

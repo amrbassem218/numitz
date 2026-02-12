@@ -1,5 +1,6 @@
 "use client";
 
+import { Difficulties, difficultyStyle } from "@/data/Contest_Content";
 import { contestProblem } from "@/types/types";
 import { ColumnDef } from "@tanstack/react-table";
 export interface ProblemSetProblem {
@@ -10,6 +11,13 @@ export interface ProblemSetProblem {
   topics: string[];
 }
 export const columns: ColumnDef<ProblemSetProblem>[] = [
+  {
+    accessorKey: "id",
+    header: "Id",
+    cell: ({ row }) => {
+      return <span className="underline text-primary">{row.original.id}</span>;
+    },
+  },
   {
     accessorKey: "name",
     header: "Name",
@@ -33,9 +41,27 @@ export const columns: ColumnDef<ProblemSetProblem>[] = [
   {
     accessorKey: "precentage_solved",
     header: "% people solved",
+    cell: ({ row }) => {
+      return (
+        <span className="text-text/60">{row.original.precentage_solved}</span>
+      );
+    },
   },
   {
     accessorKey: "difficulty",
     header: "Difficulty",
+    cell: ({ row }) => {
+      let difficulty = row.original.difficulty;
+      difficulty = `${difficulty.charAt(0).toUpperCase()}${difficulty.slice(1)}`;
+      const DifficultyAccess = Difficulties.filter(
+        (e) => e.value == difficulty,
+      )[0];
+      const color = DifficultyAccess?.color;
+      const styles = difficultyStyle;
+      if (difficulty.length > 4) difficulty = difficulty.slice(0, 3) + ".";
+      return (
+        <span className={`${styles} ${color} text-base`}>{difficulty}</span>
+      );
+    },
   },
 ];
