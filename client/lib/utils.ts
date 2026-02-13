@@ -6,3 +6,8 @@ import { UserProfile } from "@/types/types";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const cleanStr = (str: string) => {
+  str = str.trim().toLowerCase();
+  return str;
+};

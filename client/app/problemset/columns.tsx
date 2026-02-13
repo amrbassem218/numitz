@@ -1,6 +1,7 @@
 "use client";
 
 import { Difficulties, difficultyStyle } from "@/data/Contest_Content";
+import { cleanStr } from "@/lib/utils";
 import { contestProblem, Difficulty } from "@/types/types";
 import { ColumnDef } from "@tanstack/react-table";
 export interface ProblemSetProblem {
@@ -54,10 +55,10 @@ export const columns: ColumnDef<ProblemSetProblem>[] = [
       const a = rowA.getValue(columnId) as string;
       const b = rowB.getValue(columnId) as string;
       const minA = Difficulties.filter(
-        (e) => e.value.toLowerCase() === a.toLowerCase(),
+        ({ value }) => cleanStr(value) === cleanStr(a),
       )[0].min;
       const minB = Difficulties.filter(
-        (e) => e.value.toLowerCase() === b.toLowerCase(),
+        ({ value }) => cleanStr(value) === cleanStr(b),
       )[0].min;
       return minA - minB;
     },
@@ -65,7 +66,7 @@ export const columns: ColumnDef<ProblemSetProblem>[] = [
       let difficulty = row.original.difficulty;
       difficulty = `${difficulty.charAt(0).toUpperCase()}${difficulty.slice(1)}`;
       const DifficultyAccess = Difficulties.filter(
-        (e) => e.value == difficulty,
+        ({ value }) => cleanStr(value) == cleanStr(difficulty),
       )[0];
       const color = DifficultyAccess?.color;
       const styles = difficultyStyle;
