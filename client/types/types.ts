@@ -78,7 +78,11 @@ export interface Standing {
   profiles: {
     username: string;
     // avatar: string;
-  }
+  };
+}
 
-
+export interface Difficulty {
+  value: string;
+  color: string;
+  min: number;
 }

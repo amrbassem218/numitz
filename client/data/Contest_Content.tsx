@@ -57,17 +57,20 @@ export const MainTaps = [
 
 export const difficultyStyle = "font-medium";
 export const Difficulties = [
-  // TODO: Add actual colors
-  {
-    value: "Hard",
-    color: "text-red-500",
-  },
+  // TODO: Add actual colors and values
   {
     value: "Easy",
     color: "text-blue-500",
+    min: 800,
   },
   {
     value: "Medium",
     color: "text-orange-500",
+    min: 1200,
+  },
+  {
+    value: "Hard",
+    color: "text-red-500",
+    min: 1600,
   },
 ];

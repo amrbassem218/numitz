@@ -29,7 +29,7 @@ export default function LearningDashboard() {
     {
       id: "412C",
       name: "Pythagoras Game",
-      precentage_solved: 84.2,
+      precentage_solved: 94.2,
       difficulty: "medium",
       topics: [
         "calc ||",
@@ -43,7 +43,7 @@ export default function LearningDashboard() {
     {
       id: "712A",
       name: "Newton and rough planes",
-      precentage_solved: 84.2,
+      precentage_solved: 24.2,
       difficulty: "Easy",
       topics: [
         "calc ||",
@@ -57,7 +57,7 @@ export default function LearningDashboard() {
     {
       id: "412C",
       name: "Einstein fights Newton",
-      precentage_solved: 84.2,
+      precentage_solved: 54.2,
       difficulty: "Hard",
 
       topics: [

@@ -1,7 +1,7 @@
 "use client";
 
 import { Difficulties, difficultyStyle } from "@/data/Contest_Content";
-import { contestProblem } from "@/types/types";
+import { contestProblem, Difficulty } from "@/types/types";
 import { ColumnDef } from "@tanstack/react-table";
 export interface ProblemSetProblem {
   id: string;
@@ -43,13 +43,24 @@ export const columns: ColumnDef<ProblemSetProblem>[] = [
     header: "% people solved",
     cell: ({ row }) => {
       return (
-        <span className="text-text/60">{row.original.precentage_solved}</span>
+        <span className="text-text/60">{row.original.precentage_solved}%</span>
       );
     },
   },
   {
     accessorKey: "difficulty",
     header: "Difficulty",
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = rowA.getValue(columnId) as string;
+      const b = rowB.getValue(columnId) as string;
+      const minA = Difficulties.filter(
+        (e) => e.value.toLowerCase() === a.toLowerCase(),
+      )[0].min;
+      const minB = Difficulties.filter(
+        (e) => e.value.toLowerCase() === b.toLowerCase(),
+      )[0].min;
+      return minA - minB;
+    },
     cell: ({ row }) => {
       let difficulty = row.original.difficulty;
       difficulty = `${difficulty.charAt(0).toUpperCase()}${difficulty.slice(1)}`;
