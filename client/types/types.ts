@@ -57,7 +57,11 @@ export interface Submission {
   problem_id?: string;
   user_id?: string;
   user_answer?: string;
-  status?: string;
+  status?: "success" | "failure" | "idle";
+  problems?: {
+    name?: string;
+  };
+  score?: number;
 }
 
 export type ProblemStatus = "success" | "failure" | "idle";

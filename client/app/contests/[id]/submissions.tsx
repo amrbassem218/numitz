@@ -1,7 +1,8 @@
 "use client";
 import { useUser } from "@/app/hooks/useUser";
-import { useProblems, useShownProblemId } from "@/app/store";
-import { TabsContent } from "@/components/ui/tabs";
+import { useProblems, useProfile, useShownProblemId } from "@/app/store";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,23 +14,103 @@ const ContestSubmissions: React.FunctionComponent<ContestSubmissionsProps> = (
   props,
 ) => {
   const shownProblemId = useShownProblemId((state) => state.shownProblemId);
-  const submissions = useProblems(
+  const yourSubmissions = useProblems(
     (state) => state.problems[shownProblemId]?.submissions,
   );
-  const {user} = useUser();
+  const userProfile = useProfile((state) => state.userProfile);
   useEffect(() => {
-    if (user && shownProblemId) {
-      useProblems.getState().fetchProblemSubmissions(user.id, shownProblemId);
+    if (userProfile && userProfile?.id && shownProblemId) {
+      useProblems
+        .getState()
+        .fetchProblemSubmissions(userProfile.id, shownProblemId);
     }
-  }, [user, shownProblemId]);
+  }, [userProfile, shownProblemId]);
   return (
-    <TabsContent value="submissions" className="w-full h-full p-2 flex flex-col gap-4">
-      {submissions?.map((submission) => (
-        <div key={submission.id}>
-          <p>{submission.user_answer}</p>
-          <p>{submission.status}</p>
-        </div>
-      ))}
+    <TabsContent
+      value="submissions"
+      className="w-full h-full p-2 flex flex-col gap-4"
+    >
+      <Tabs>
+        <TabsList>
+          <TabsTrigger value="your_submissions">Your submissions</TabsTrigger>
+          <TabsTrigger value="friends_submissions">
+            Friends submissions
+          </TabsTrigger>
+          <TabsTrigger value="General_submissions">
+            General submissions
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="your_submissions">
+          {yourSubmissions?.map((submission, i) => (
+            <div
+              className={cn(
+                i % 2 === 0 && "bg-bg-light",
+                "rounded-md flex gap-10 h-12 items-center px-3",
+              )}
+            >
+              {/* Submission Id  */}
+              <div className="border border-muted-foreground/20 px-2 text-sm  rounded-md">
+                <span className="underline text-primary text-base">
+                  {submission.id}0000
+                </span>
+              </div>
+
+              {/* Submission Date */}
+              <div>
+                {/* Date */}
+                <span></span>
+
+                {/* Time */}
+                <span>
+                  {/* Local time zone */}
+                  <span></span>
+                </span>
+              </div>
+
+              {/* username */}
+              {/* TODO: Add user based styling */}
+              <span>{userProfile.username}</span>
+
+              {/* problem title */}
+              <span>{submission.problems?.name}</span>
+
+              {/* Ans */}
+              <span
+                className={cn(
+                  submission.status === "success" && "text-success",
+                  submission.status === "failure" && "text-destructive",
+                  "font-medium",
+                )}
+              >
+                Ans: {submission.user_answer}
+              </span>
+
+              {/* score */}
+              <span
+                className={cn(
+                  submission.status === "success" && "text-success",
+                  submission.status === "failure" && "text-destructive",
+                  "font-semibold",
+                )}
+              >
+                {submission.score &&
+                  (submission?.score > 0
+                    ? "+"
+                    : submission.score < 0
+                      ? "-"
+                      : "") + submission.score}
+              </span>
+            </div>
+          ))}
+        </TabsContent>
+      </Tabs>
+      {/* {yourSubmissions?.map((submission) => ( */}
+      {/*   <div key={submission.id}> */}
+      {/*     <p>{submission.user_answer}</p> */}
+      {/*     <p>{submission.status}</p> */}
+      {/*   </div> */}
+      {/* ))} */}
     </TabsContent>
   );
 };
