@@ -4,6 +4,7 @@ import {
   ProblemCore,
   ProblemStatus,
   Submission,
+  SubmissionsTypes,
   UserProfile,
 } from "@/types/types";
 import { User } from "@supabase/supabase-js";
@@ -138,13 +139,24 @@ export const useProfile = create<UserProfileContext>((set, get) => ({
 interface Problem {
   core: ProblemCore;
   coreLoading: boolean;
-  submissions: Submission[];
+  submissions: {
+    general_submissions: Submission[];
+    your_submissions: Submission[];
+    friends_submissions: Submission[];
+  };
 }
 interface ContestProblemsContext {
   problems: Record<string, Problem>;
   fetchCore: (problemId: string) => Promise<void>;
-  fetchProblemSubmissions: (userId: string, problemId: string) => Promise<void>;
-  updateProblemSubmissions: (submission: Submission) => void;
+  fetchProblemSubmissions: (
+    userId: string,
+    problemId: string,
+    type?: SubmissionsTypes,
+  ) => Promise<void>;
+  updateProblemSubmissions: (
+    submission: Submission,
+    type?: SubmissionsTypes,
+  ) => void;
 }
 export const useProblems = create<ContestProblemsContext>((set, get) => ({
   problems: {},
@@ -222,7 +234,11 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
     }
   },
   // Fetch user submitted Submissions of a problem
-  fetchProblemSubmissions: async (userId: string, problemId: string) => {
+  fetchProblemSubmissions: async (
+    userId: string,
+    problemId: string,
+    type?: SubmissionsTypes,
+  ) => {
     try {
       // check if it's saved
       const problem = get().problems[problemId];
@@ -238,12 +254,34 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
           }
         });
       }
-      // Get Submissions from db
-      const response = await axios(
-        `/api/problems/${problemId}/submissions/${userId}`,
-      );
-      if (response) {
-        let submissions: Submission[] = response.data;
+      if (type) {
+        let submissions: Submission[] = [];
+        if (type === "general_submissions") {
+          try {
+            const res = await axios.get(
+              `/api/problems/${problemId}/submissions`,
+            );
+            if (res.data) {
+              console.log("Got general problem Submissions successfully");
+              console.log(res.data);
+              submissions = res.data;
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        } else if (type === "your_submissions") {
+          try {
+            const res = await axios(
+              `/api/problems/${problemId}/submissions/${userId}`,
+            );
+            if (res) {
+              submissions = res.data;
+            }
+          } catch (err) {
+            console.error("Error while fetching submissions: ", err);
+          }
+        }
+        //TODO: Implement one for Friends Submissions
         submissions = submissions.map((submission) => {
           return {
             ...submission,
@@ -252,46 +290,59 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
         });
         console.log("submissions_final: ", submissions);
 
+        // Date sort
+        submissions.sort(({ created_at: a }, { created_at: b }) => {
+          return a < b ? 1 : a > b ? -1 : 0;
+        });
         set((state) => ({
           problems: {
             ...state.problems,
             [problemId]: {
               ...state.problems[problemId],
-              submissions,
+              submissions: {
+                ...state.problems[problemId].submissions,
+                [type]: submissions,
+              },
             },
           },
         }));
-      } else {
-        console.error("Error while fetching submissions: ", response);
       }
     } catch (error) {
       console.error("Failed to fetch submissions:", error);
     }
   },
 
-  updateProblemSubmissions: (submission: Submission) => {
-    // if(submission){
-    //   try{
-    //     let {problem_id: problemId} = submission;
-    //     let submissions = get().problems[problemId].submissions ?? [];
-    //
-    //     if(submissions){
-    //       submissions.unshift(submission)
-    //       set((state) => ({
-    //         problems: {
-    //           ...state.problems,
-    //           [problemId]: {
-    //             ...state.problems[problemId],
-    //             submissions,
-    //           },
-    //         },
-    //       }));
-    //     }
-    //   }
-    //   catch (error) {
-    //     console.error("Failed to fetch submissions:", error);
-    //   }
-    // }
+  updateProblemSubmissions: (
+    submission: Submission,
+    type?: SubmissionsTypes,
+  ) => {
+    if (submission) {
+      try {
+        let { problem_id: problemId } = submission;
+        if (problemId && type) {
+          let submissionsToUpdate =
+            get().problems[problemId].submissions[type] ?? [];
+
+          if (submissionsToUpdate) {
+            submissionsToUpdate.unshift(submission);
+            set((state) => ({
+              problems: {
+                ...state.problems,
+                [problemId]: {
+                  ...state.problems[problemId],
+                  submissions: {
+                    ...state.problems[problemId].submissions,
+                    [type]: submissionsToUpdate,
+                  },
+                },
+              },
+            }));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch submissions:", error);
+      }
+    }
   },
 }));
 

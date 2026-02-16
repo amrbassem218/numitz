@@ -6,6 +6,7 @@ import {
   contestProblem,
   FullProblem,
   ProblemCore,
+  ProblemStatus,
 } from "@/types/types";
 import {
   Collapsible,
@@ -30,6 +31,7 @@ import { Field, FieldError, FieldLabel } from "../ui/field";
 import { toast } from "sonner";
 import { useUser } from "@/app/hooks/useUser";
 import { useProblems, useShownProblemId } from "@/app/store";
+import { ScrollArea } from "../ui/scroll-area";
 interface Props {
   problemsStatus: Record<string, string>;
   setProblemsStatus: Dispatch<SetStateAction<Record<string, string>>>;
@@ -63,7 +65,9 @@ const Problem_Statement_card = ({
   const problemCore = useProblems(
     (state) => state.problems[shownProblemId]?.core,
   );
-  const updateSubmission = useProblems((state) => state.updateProblemSubmissions);
+  const updateSubmission = useProblems(
+    (state) => state.updateProblemSubmissions,
+  );
   const saveInputToLocalStorage = (value: string) => {
     if (typeof window !== "undefined") {
       localStorage.setItem(`input-problem-${problemCore?.id}`, value);
@@ -75,8 +79,7 @@ const Problem_Statement_card = ({
       saveInputToLocalStorage(user_answer);
       // validation
       if (problemCore?.answer && problemCore.id && user?.id) {
-
-        let status = "idle";
+        let status: ProblemStatus = "idle";
         if (user_answer === problemCore.answer) {
           status = "success";
         } else {
@@ -87,7 +90,7 @@ const Problem_Statement_card = ({
           user_answer,
           status,
         };
-        updateSubmission(submission_data) 
+        updateSubmission(submission_data);
         axios
           .post(
             `/api/problems/${problemCore.id}/submissions/${user.id}`,
@@ -153,115 +156,119 @@ const Problem_Statement_card = ({
   if (!shownProblemId) return null;
 
   return (
-    <TabsContent
-      value="problemStatement"
-      className="w-150 h-full mx-auto p-4 my-2 flex-col gap-4 flex items-center"
-      key={problemCore?.id}
-    >
-      {/* Problem Header */}
-      <div className="flex flex-col gap-2 mb-2 w-full">
-        <h1 className="text-2xl font-bold text-center">
-          Problem {problemCore?.name ?? "UNKNOWN"}
-        </h1>
-
-        {/* Methods to access problem */}
-        <div className="flex items-center gap-40 mx-auto text-primary">
-          {/* PDF access */}
-          <button className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <FaRegFilePdf />
-              <span>PDF</span>
-            </div>
-            <FaExternalLinkAlt className="w-3 h-3" />
-          </button>
-
-          {/* Latex access */}
-          <button className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <LuFileText />
-              <span>Latex</span>
-            </div>
-            <FaExternalLinkAlt className="w-3 h-3" />
-          </button>
-        </div>
-      </div>
-      <Separator className="bg-bg-light h-0.5! w-full" />
-
-      {/* Problem Description & Submission */}
-      <MathJaxContent className="flex flex-col gap-5 w-full">
-        {/* Problem Description */}
-        <div className="">
-          <p className="text-text text-sm">
-            {parse(problemCore?.description_html || "")}
-          </p>
-        </div>
-      </MathJaxContent>
-      {/* Problem Submission */}
-      <form
-        action=""
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full max-w-2xl flex gap-4"
+    <ScrollArea className="h-full">
+      <TabsContent
+        value="problemStatement"
+        className="w-150 h-full mx-auto p-4 my-2 flex-col gap-4 flex items-center"
+        key={problemCore?.id}
       >
-        <Controller
-          name="answer"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <Input
-                {...field}
-                id="answer"
-                aria-invalid={fieldState.invalid}
-                placeholder="Answer here..."
-                className="flex-1 border-none bg-bg-light! text-text-muted"
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                onBlur={(e) => {
-                  saveInputToLocalStorage(e.target.value);
-                  field.onBlur();
-                }}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Button type="submit" className="w-25 text-text" variant="primary">
-          Submit
-        </Button>
-      </form>
-      <Separator className="bg-bg-light h-0.5! w-full" />
+        {/* Problem Header */}
+        <div className="flex flex-col gap-2 mb-2 w-full">
+          <h1 className="text-2xl font-bold text-center">
+            Problem {problemCore?.name ?? "UNKNOWN"}
+          </h1>
 
-      {/* Help */}
-      <div className="w-full flex flex-col items-start gap-4 ">
-        {/* Show calculator */}
-        <button className="text-primary underline">Show calculator</button>
-        {/* How to submit */}
-        <Collapsible className="flex flex-col gap-1">
-          <CollapsibleTrigger className="" asChild>
-            <button className="flex items-center gap-1">
-              <span className="font-normal">How do I submit an answer?</span>
-              <span className="underline text-primary">show here</span>
-              <ChevronsUpDown className="w-5 h-5 text-primary" />
+          {/* Methods to access problem */}
+          <div className="flex items-center gap-40 mx-auto text-primary">
+            {/* PDF access */}
+            <button className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <FaRegFilePdf />
+                <span>PDF</span>
+              </div>
+              <FaExternalLinkAlt className="w-3 h-3" />
             </button>
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <ul role="list" className="list-disc text-text-muted pl-4">
-              <li>Click on the problem you want to solve.</li>
-              <li>Read the problem statement carefully.</li>
-              <li>Submit your solution using the input box provided.</li>
-            </ul>
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
-      <Separator className="bg-bg-light h-0.5! w-full" />
 
-      {/* Report a problem */}
-      <div className="w-full flex justify-end">
-        <button className="text-text-muted underline text-sm">
-          Report a problem
-        </button>
-      </div>
-    </TabsContent>
+            {/* Latex access */}
+            <button className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <LuFileText />
+                <span>Latex</span>
+              </div>
+              <FaExternalLinkAlt className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+        <Separator className="bg-bg-light h-0.5! w-full" />
+
+        {/* Problem Description & Submission */}
+        <MathJaxContent className="flex flex-col gap-5 w-full">
+          {/* Problem Description */}
+          <div className="">
+            <p className="text-text text-sm">
+              {parse(problemCore?.description_html || "")}
+            </p>
+          </div>
+        </MathJaxContent>
+        {/* Problem Submission */}
+        <form
+          action=""
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full max-w-2xl flex gap-4"
+        >
+          <Controller
+            name="answer"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <Input
+                  {...field}
+                  id="answer"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="Answer here..."
+                  className="flex-1 border-none bg-bg-light! text-text-muted"
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  onBlur={(e) => {
+                    saveInputToLocalStorage(e.target.value);
+                    field.onBlur();
+                  }}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Button type="submit" className="w-25 text-text" variant="primary">
+            Submit
+          </Button>
+        </form>
+        <Separator className="bg-bg-light h-0.5! w-full" />
+
+        {/* Help */}
+        <div className="w-full flex flex-col items-start gap-4 ">
+          {/* Show calculator */}
+          <button className="text-primary underline">Show calculator</button>
+          {/* How to submit */}
+          <Collapsible className="flex flex-col gap-1">
+            <CollapsibleTrigger className="" asChild>
+              <button className="flex items-center gap-1">
+                <span className="font-normal">How do I submit an answer?</span>
+                <span className="underline text-primary">show here</span>
+                <ChevronsUpDown className="w-5 h-5 text-primary" />
+              </button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <ul role="list" className="list-disc text-text-muted pl-4">
+                <li>Click on the problem you want to solve.</li>
+                <li>Read the problem statement carefully.</li>
+                <li>Submit your solution using the input box provided.</li>
+              </ul>
+            </CollapsibleContent>
+          </Collapsible>
+        </div>
+        <Separator className="bg-bg-light h-0.5! w-full" />
+
+        {/* Report a problem */}
+        <div className="w-full flex justify-end">
+          <button className="text-text-muted underline text-sm">
+            Report a problem
+          </button>
+        </div>
+      </TabsContent>
+    </ScrollArea>
   );
 };
 

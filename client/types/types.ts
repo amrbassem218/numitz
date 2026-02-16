@@ -64,21 +64,24 @@ export const defaultFormattedDate = {
   fullDate: "",
 };
 
+export type ProblemStatus = "success" | "failure" | "idle";
+
 export interface Submission {
   id?: string;
-  created_at?: Date;
+  created_at: Date;
   problem_id?: string;
   user_id?: string;
   user_answer?: string;
-  status?: "success" | "failure" | "idle";
+  status?: ProblemStatus;
   problems?: {
     name?: string;
+  };
+  profiles?: {
+    username?: string;
   };
   score?: number;
   formattedDate?: FormattedDate;
 }
-
-export type ProblemStatus = "success" | "failure" | "idle";
 
 export interface ProblemCore {
   id: string;
@@ -104,3 +107,8 @@ export interface Difficulty {
   color: string;
   min: number;
 }
+
+export type SubmissionsTypes =
+  | "your_submissions"
+  | "general_submissions"
+  | "friends_submissions";
