@@ -50,6 +50,19 @@ export interface UserProfile {
   image?: string;
   bio?: string;
 }
+export interface FormattedDate {
+  time: string;
+  date: string;
+  timezone: string;
+  fullDate: string;
+}
+
+export const defaultFormattedDate = {
+  time: "",
+  date: "",
+  timezone: "",
+  fullDate: "",
+};
 
 export interface Submission {
   id?: string;
@@ -62,6 +75,7 @@ export interface Submission {
     name?: string;
   };
   score?: number;
+  formattedDate?: FormattedDate;
 }
 
 export type ProblemStatus = "success" | "failure" | "idle";

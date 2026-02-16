@@ -250,7 +250,6 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
             formattedDate: getFormattedDate(submission.created_at),
           };
         });
-        console.log("submissions_final: ", submissions);
 
         set((state) => ({
           problems: {
