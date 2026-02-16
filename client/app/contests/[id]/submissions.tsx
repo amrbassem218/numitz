@@ -76,10 +76,17 @@ const ContestSubmissions: React.FunctionComponent<ContestSubmissionsProps> = (
 
                 {/* username */}
                 {/* TODO: Add user based styling */}
-                <span>{userProfile.username}</span>
+                <span className="text-text/60">
+                  {userProfile.username?.charAt(0)}
+                  <span className="text-orange-500">
+                    {userProfile.username?.slice(1)}
+                  </span>
+                </span>
 
                 {/* problem title */}
-                <span>{submission.problems?.name}</span>
+                <span className="text-text/60">
+                  {submission.problems?.name}
+                </span>
 
                 {/* Ans */}
                 <span
