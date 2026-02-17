@@ -5,7 +5,7 @@
 
 @layer base {
   main {
-    @apply min-h-screen max-w-7xl mx-auto px-5 lg:px-10;
+    @apply max-w-7xl mx-auto px-5 lg:px-10;
     font-family: var(--font-satoshi);
   }
   h1,

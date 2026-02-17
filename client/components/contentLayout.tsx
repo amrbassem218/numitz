@@ -1,6 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
+import { HEADER_MARGIN } from "@/lib/utils";
 
 type Props = {
   children: React.ReactNode;
@@ -18,7 +19,7 @@ export default function ContentLayout({ children }: Props) {
   return (
     <div>
       {!isBanned && <Navbar />}
-      <div className={`${!isBanned && "mt-14"}`}>{children}</div>
+      <div style={{ marginTop: `${HEADER_MARGIN}px` }}>{children}</div>
     </div>
   );
 }

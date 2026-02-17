@@ -47,3 +47,5 @@ export const generateId = (length = 8) => {
     .map((b) => chars[b % chars.length])
     .join("");
 };
+
+export const HEADER_MARGIN = 56;

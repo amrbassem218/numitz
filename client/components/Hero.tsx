@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import MathNoise from "./ui/MathNoise";
+import { HEADER_MARGIN } from "@/lib/utils";
 
 const Hero = () => {
   const piRef = useRef<HTMLDivElement>(null);
@@ -58,7 +59,10 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="w-full h-screen flex flex-col justify-center items-center gap-5 relative overflow-hidden select-none">
+    <section
+      style={{ height: `calc(100vh - ${HEADER_MARGIN}px)` }}
+      className={`w-full  flex flex-col justify-center items-center gap-5 relative overflow-hidden select-none`}
+    >
       <h1 className="absolute text-[150px] font-bold text-primary opacity-30 blur-3xl scale-110 flex flex-col items-center pointer-events-none">
         <span>
           <span className="text-[190px]">N</span>UM
