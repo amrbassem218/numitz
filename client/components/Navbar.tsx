@@ -12,24 +12,11 @@ const Navbar = () => {
   const pathName = usePathname();
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const userProfile = useProfile((state) => state.userProfile);
-  const bannedURLs = ["/contests/"];
-  const router = useRouter();
-  let isBanned = false;
-  bannedURLs.forEach((e) => {
-    if (pathName.includes(e)) {
-      isBanned = true;
-    }
-  });
   useEffect(() => {
     console.log("userprofile: ", userProfile);
   }, [userProfile]);
-  if (isBanned || !userProfile) {
-    return;
-  }
   return (
-    <nav
-      className={`fixed top-0 left-2/4 -translate-x-2/4 w-full mx-2 flex justify-between items-center gap-5 p-5 z-50 bg-transparent rounded-b-2xl`}
-    >
+    <nav className="fixed top-0 left-2/4 -translate-x-2/4 w-full px-4 py-2 flex justify-between items-center gap-5 z-50 bg-bg-dark">
       <div className="flex items-center gap-3">
         <Link href="/">
           <h5 className="font-bold! flex items-end justify-end z-50">
@@ -46,12 +33,13 @@ const Navbar = () => {
             </div>
           </h5>
         </Link>
+
         <div className="hidden md:flex">
           {MainLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className={`mx-3 text-lg hover:text-primary duration-100 ${
+              className={`mx-3 text-base hover:text-primary duration-100 ${
                 pathName === link.href
                   ? "text-primary "
                   : "text-neutral-700 dark:text-neutral-300 "

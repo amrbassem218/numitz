@@ -110,9 +110,9 @@ export default function LearningDashboard() {
   );
   const user = useProfile((state) => state.user);
   return (
-    <main className="max-w-full mt-22 flex px-0 grid grid-cols-24 bg-bg">
+    <main className="max-w-full flex px-0 grid grid-cols-24 bg-background">
       {/* Left side bar */}
-      <aside className="bg-bg hidden xl:block col-span-4 max-w-60 border-r border-foreground/20 px-2">
+      <aside className="bg-background hidden xl:block col-span-4 max-w-60 border-r border-foreground/20 px-2 py-2">
         <div className="flex w-full ">
           <Tabs
             defaultValue="problems"
@@ -120,12 +120,12 @@ export default function LearningDashboard() {
             value={activeMainTab}
             onValueChange={setActiveMainTab}
           >
-            <TabsList className="flex flex-col gap-2 w-full h-40 justify-start rounded-b-none bg-transparent gap-0">
+            <TabsList className="flex flex-col h-auto gap-2 w-full justify-start rounded-b-none bg-transparent">
               {activeTabs.map((tab) => (
-                <Fragment key={tab.value}>
+                <div className="h-12 w-full">
                   <TabsTrigger
                     value={tab.value}
-                    className={`w-full h-15 rounded-sm px-4 flex items-center justify-start flex justify-between  ${activeMainTab == tab.value ? "bg-muted-foreground/20! font-semibold" : "bg-transparent opacity-90 font-thin!"}`}
+                    className={`w-full rounded-sm px-4 flex justify-start flex justify-between  ${activeMainTab == tab.value ? "bg-bg-light font-semibold" : "bg-transparent opacity-90 font-thin!"}`}
                   >
                     <div className="flex items-center gap-2">
                       <tab.icon className="text-text w-4 h-4" />
@@ -141,7 +141,7 @@ export default function LearningDashboard() {
                       </div>
                     )}
                   </TabsTrigger>
-                </Fragment>
+                </div>
               ))}
             </TabsList>
           </Tabs>
@@ -209,32 +209,6 @@ export default function LearningDashboard() {
 
         <div className="space-y-1.5">
           <DataTable columns={columns} data={problems} />
-          {/* {problems.map((p, i) => ( */}
-          {/*   <div */}
-          {/*     key={i} */}
-          {/*     className="flex items-center justify-between bg-card px-6 py-3.5 rounded-xl hover:bg-background transition-colors" */}
-          {/*   > */}
-          {/*     <div className="flex items-center gap-6"> */}
-          {/*       <span className="text-gray-500 w-6">{i + 1}.</span> */}
-          {/*       <span className="text-[15px]">{p.title}</span> */}
-          {/*     </div> */}
-          {/**/}
-          {/*     <div className="flex items-center gap-6 text-[13px]"> */}
-          {/*       <span className="text-gray-500">{p.solved}</span> */}
-          {/*       <span */}
-          {/*         className={ */}
-          {/*           p.diff === "Easy" */}
-          {/*             ? "text-green-400 bg-green-400/10 px-3 py-1 rounded-full" */}
-          {/*             : p.diff === "Med." */}
-          {/*               ? "text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full" */}
-          {/*               : "text-red-400 bg-red-400/10 px-3 py-1 rounded-full" */}
-          {/*         } */}
-          {/*       > */}
-          {/*         {p.diff} */}
-          {/*       </span> */}
-          {/*     </div> */}
-          {/*   </div> */}
-          {/* ))} */}
         </div>
 
         <div className=" flex overflow-hidden">
@@ -243,7 +217,7 @@ export default function LearningDashboard() {
       </section>
 
       {/* Right side bar */}
-      <aside className="bg-bg p-6 hidden xl:block col-span-4 max-w-70 justify-self-end mx-2">
+      <aside className="bg-background p-6 hidden xl:block col-span-4 max-w-70 justify-self-end mx-2">
         <h3 className="font-semibold mb-4 text-[15px]">Weekly Premium</h3>
         <div className="grid grid-cols-5 gap-2 mb-10">
           {["W1", "W2", "W3", "W4", "W5"].map((w, i) => (

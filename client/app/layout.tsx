@@ -10,6 +10,7 @@ import Proivders from "./providers";
 import { redirect } from "next/navigation";
 import NavigationListener from "@/components/navigationListener";
 import localFont from "next/font/local";
+import ContentLayout from "@/components/contentLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -169,8 +170,7 @@ export default function RootLayout({
         >
           <Proivders>
             <NavigationListener />
-            <Navbar />
-            {children}
+            <ContentLayout children={children} />
             <Toaster />
             <Footer />
           </Proivders>

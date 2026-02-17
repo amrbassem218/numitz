@@ -97,7 +97,7 @@ export function DataTable<TData, TValue>({
           />
         </div>
         {/* Sorting */}
-        <div className="p-2 bg-muted-foreground/20 rounded-full cursor-pointer hover:bg-muted-foreground/25 ">
+        <div className="p-2 bg-bg rounded-full cursor-pointer hover:bg-muted-foreground/25 ">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <MdOutlineSort className="w-5 h-5 text-muted-foreground" />
@@ -136,7 +136,7 @@ export function DataTable<TData, TValue>({
                     <TableCell
                       key={cell.id}
                       className={cn(
-                        i % 2 === 0 && "bg-muted-foreground/20",
+                        i % 2 === 0 && "bg-bg",
                         j == row.getVisibleCells().length - 1 && "rounded-r-md",
                         j == 0 && "rounded-l-md",
                         "",
