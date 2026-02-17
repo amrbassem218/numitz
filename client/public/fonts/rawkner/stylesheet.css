@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'Rawkner Round Oblique';
+    src: url('Rawkner-RoundOblique.eot');
+    src: local('Rawkner Round Oblique'), local('Rawkner-RoundOblique'),
+        url('Rawkner-RoundOblique.eot?#iefix') format('embedded-opentype'),
+        url('Rawkner-RoundOblique.woff2') format('woff2'),
+        url('Rawkner-RoundOblique.woff') format('woff'),
+        url('Rawkner-RoundOblique.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rawkner';
+    src: url('Rawkner-Black.eot');
+    src: local('Rawkner Black'), local('Rawkner-Black'),
+        url('Rawkner-Black.eot?#iefix') format('embedded-opentype'),
+        url('Rawkner-Black.woff2') format('woff2'),
+        url('Rawkner-Black.woff') format('woff'),
+        url('Rawkner-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rawkner Oblique';
+    src: url('Rawkner-Oblique.eot');
+    src: local('Rawkner Oblique'), local('Rawkner-Oblique'),
+        url('Rawkner-Oblique.eot?#iefix') format('embedded-opentype'),
+        url('Rawkner-Oblique.woff2') format('woff2'),
+        url('Rawkner-Oblique.woff') format('woff'),
+        url('Rawkner-Oblique.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rawkner Round';
+    src: url('Rawkner-Round.eot');
+    src: local('Rawkner Round'), local('Rawkner-Round'),
+        url('Rawkner-Round.eot?#iefix') format('embedded-opentype'),
+        url('Rawkner-Round.woff2') format('woff2'),
+        url('Rawkner-Round.woff') format('woff'),
+        url('Rawkner-Round.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+

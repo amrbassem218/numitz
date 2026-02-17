@@ -27,7 +27,9 @@ const Navbar = () => {
     return;
   }
   return (
-    <nav className="fixed top-0 left-2/4 -translate-x-2/4 w-full mx-2 flex justify-between items-center gap-5 p-5 z-50 bg-card rounded-b-2xl">
+    <nav
+      className={`fixed top-0 left-2/4 -translate-x-2/4 w-full mx-2 flex justify-between items-center gap-5 p-5 z-50 bg-transparent rounded-b-2xl`}
+    >
       <div className="flex items-center gap-3">
         <Link href="/">
           <h5 className="font-bold! flex items-end justify-end z-50">
@@ -61,7 +63,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="hidden lg:flex items-center gap-2 w-1/4">
+      <div className="hidden lg:flex items-center gap-4 w-1/4">
         <Input placeholder="Search for something..." />
         <Settings />
         {userProfile ? (

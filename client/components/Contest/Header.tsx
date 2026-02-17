@@ -26,9 +26,9 @@ const ContestHeader = () => {
           </div>
           <div className="flex items-end gap-2">
             <TfiMenu className="w-4.5 h-4.5 text-muted-foreground" />
-            <h6 className="hidden md:inline text-base font-normal self-end leading-none">
+            <span className="hidden md:inline text-base font-medium self-end leading-none">
               Contest List
-            </h6>
+            </span>
           </div>
         </div>
       </section>

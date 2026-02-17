@@ -1,11 +1,29 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
+@import url("/fonts/satoshi/stylesheet.css") @import
+  url("/fonts/rawkner/stylesheet.css") @custom-variant dark (&: is(.dark *));
 
 @layer base {
   main {
     @apply min-h-screen max-w-7xl mx-auto px-5 lg:px-10;
+    font-family: var(--font-satoshi);
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  Link {
+    font-family: var(--font-rawkner);
+  }
+
+  .MathJax,
+  .mjx-chtml,
+  .math,
+  .katex,
+  .katex * {
+    font-family: "Arial" !important;
   }
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
@@ -35,6 +53,9 @@
   }
   .Link {
     @apply font-semibold text-primary/50 border-b border-primary/50 hover:text-primary hover:border-primary duration-300;
+  }
+  main {
+    @applay;
   }
 }
 

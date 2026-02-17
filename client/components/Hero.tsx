@@ -29,7 +29,7 @@ const Hero = () => {
           duration: 2,
           ease: "power3.out",
           delay: 0.5,
-        }
+        },
       );
     }
 
@@ -52,7 +52,7 @@ const Hero = () => {
           duration: 2,
           ease: "power3.out",
           delay: 0.7,
-        }
+        },
       );
     }
   }, []);

@@ -7,8 +7,9 @@ import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import Proivders from "./providers";
-import { redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 import NavigationListener from "@/components/navigationListener";
+import localFont from "next/font/local";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,14 +25,98 @@ export const metadata: Metadata = {
   title: "Numitz",
   description: "A platform for competitive mathematics",
 };
+const rawkner = localFont({
+  src: [
+    {
+      path: "../public/fonts/rawkner/Rawkner-Black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/rawkner/Rawkner-Round.woff2",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/rawkner/Rawkner-Oblique.woff2",
+      weight: "900",
+      style: "oblique",
+    },
+    {
+      path: "../public/fonts/rawkner/Rawkner-RoundOblique.woff2",
+      weight: "900",
+      style: "oblique",
+    },
+  ],
+  variable: "--font-rawkner",
+});
 
+const satoshi = localFont({
+  src: [
+    {
+      path: "../public/fonts/satoshi/Satoshi-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-LightItalic.woff2",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-MediumItalic.woff2",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-BoldItalic.woff2",
+      weight: "700",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-Black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-BlackItalic.woff2",
+      weight: "900",
+      style: "italic",
+    },
+  ],
+  variable: "--font-satoshi",
+});
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${rawkner.variable} ${satoshi.variable}`}
+    >
       <head>
         {/* MathJax v4 Configuration */}
         <script
@@ -83,7 +168,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Proivders>
-            <NavigationListener/>
+            <NavigationListener />
             <Navbar />
             {children}
             <Toaster />
