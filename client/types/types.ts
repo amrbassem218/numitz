@@ -117,3 +117,5 @@ export const SUBMISSION_TYPES = [
 
 // Derive the type from the array
 export type SubmissionsTypes = (typeof SUBMISSION_TYPES)[number];
+
+export type HeaderType = "short" | "long" | "contest";

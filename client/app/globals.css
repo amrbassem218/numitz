@@ -5,7 +5,7 @@
 
 @layer base {
   main {
-    @apply max-w-7xl mx-auto px-5 lg:px-10;
+    @apply max-w-7xl mx-auto;
     font-family: var(--font-satoshi);
   }
   h1,
@@ -53,9 +53,6 @@
   }
   .Link {
     @apply font-semibold text-primary/50 border-b border-primary/50 hover:text-primary hover:border-primary duration-300;
-  }
-  main {
-    @applay;
   }
 }
 

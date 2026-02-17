@@ -163,7 +163,7 @@ export default function Page() {
   }
 
   return (
-    <main className="h-screen! max-h-screen! max-w-full! px-3 flex flex-col py-1">
+    <main className="h-screen! max-h-screen! max-w-full! px-1 flex flex-col py-1">
       {/* Contest Header */}
       <ContestHeader />
 
@@ -182,7 +182,7 @@ export default function Page() {
 
       {/* Problems List Screen for phones */}
       <div
-        className={`fixed top-0 left-0 bg-background px-4 rounded-2xl w-full mb-4 flex flex-col justify-center items-center gap-3 h-screen duration-150 ${
+        className={`fixed top-0 left-0 bg-background px-4  rounded-2xl w-full mb-4 flex flex-col justify-center items-center gap-3 h-screen duration-150 ${
           isMobile && showLevels ? "opacity-100 z-10" : "opacity-0 -z-10"
         }`}
       >

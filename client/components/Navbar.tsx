@@ -7,8 +7,11 @@ import { Logs, Plus, Send, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useProfile } from "@/app/store";
 import { Input } from "./ui/input";
-
-const Navbar = () => {
+import { HeaderType } from "@/types/types";
+interface Props {
+  type: HeaderType;
+}
+const Navbar = ({ type }: Props) => {
   const pathName = usePathname();
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const userProfile = useProfile((state) => state.userProfile);
@@ -16,7 +19,9 @@ const Navbar = () => {
     console.log("userprofile: ", userProfile);
   }, [userProfile]);
   return (
-    <nav className="fixed top-0 left-2/4 -translate-x-2/4 w-full px-4 py-2 flex justify-between items-center gap-5 z-50 bg-bg-dark">
+    <nav
+      className={`fixed top-0 left-0 w-full px-4 py-2 flex  ${type === "short" ? "justify-around" : type === "long" ? "justify-between" : ""} items-center gap-5 z-50 bg-bg-dark`}
+    >
       <div className="flex items-center gap-3">
         <Link href="/">
           <h5 className="font-bold! flex items-end justify-end z-50">
@@ -74,6 +79,7 @@ const Navbar = () => {
         </Button>
       </div>
 
+      {/* for mobile */}
       <div
         className={`absolute top-20 left-0 w-full bg-white/10 backdrop-blur-xs flex flex-col items-center md:hidden py-5
     transition-all duration-300 ease-out 

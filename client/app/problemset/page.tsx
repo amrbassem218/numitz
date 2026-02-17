@@ -10,6 +10,7 @@ import { useProfile } from "../store";
 import { FaRegUserCircle } from "react-icons/fa";
 import { DataTable } from "./data_table";
 import { columns } from "./columns";
+import { HEADER_MARGIN } from "@/lib/utils";
 export default function LearningDashboard() {
   const problems = [
     {
@@ -110,7 +111,10 @@ export default function LearningDashboard() {
   );
   const user = useProfile((state) => state.user);
   return (
-    <main className="max-w-full flex px-0 grid grid-cols-24 bg-background">
+    <main
+      style={{ height: `calc(100vh - ${HEADER_MARGIN}px)` }}
+      className="max-w-full flex px-0 grid grid-cols-24 bg-background"
+    >
       {/* Left side bar */}
       <aside className="bg-background hidden xl:block col-span-4 max-w-60 border-r border-foreground/20 px-2 py-2">
         <div className="flex w-full ">
