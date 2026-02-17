@@ -144,6 +144,7 @@ interface Problem {
     general_submissions: Submission[];
     your_submissions: Submission[];
     friends_submissions: Submission[];
+    loading: boolean;
   };
 }
 interface ContestProblemsContext {
@@ -240,9 +241,20 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
     try {
       // check if it's saved
       const problem = get().problems[problemId];
-      console.log("core loading: ", problem?.coreLoading);
-      // Check if core is still loading (in order not to interfere with the network request and give it privilege)
+      set((state) => ({
+        problems: {
+          ...state.problems,
+          [problemId]: {
+            ...state.problems[problemId],
+            submissions: {
+              ...state.problems[problemId].submissions,
+              loading: true,
+            },
+          },
+        },
+      }));
       if (problem?.coreLoading == true) {
+        // Check if core is still loading (in order not to interfere with the network request and give it privilege)
         const unsubscribe = useProblems.subscribe((state, prevState) => {
           const wasLoading = prevState.problems[problemId]?.coreLoading;
           const isLoading = state.problems[problemId]?.coreLoading;
@@ -301,6 +313,7 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
               submissions: {
                 ...state.problems[problemId].submissions,
                 [type]: submissions,
+                loading: false,
               },
             },
           },

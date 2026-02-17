@@ -23,6 +23,9 @@ function SubmissionsTable({ type, problemId }: Props) {
     const submissions = state.problems[problemId]?.submissions;
     return (submissions && submissions[type]) ?? EMPTY_ARRAY;
   });
+  const loading = useProblems(
+    (state) => state.problems[problemId]?.submissions?.loading ?? true,
+  );
   useEffect(() => {
     if (type && problemId && userProfile.id) {
       submissionsFetch(userProfile.id, problemId, type);
@@ -48,14 +51,14 @@ function SubmissionsTable({ type, problemId }: Props) {
               )}
             >
               {/* Submission Id  */}
-              <div className="border border-muted-foreground/20 px-2 text-center rounded-md w-24">
+              <div className="border border-muted-foreground/20 px-2 text-center rounded-md w-22">
                 <span className="underline text-primary text-sm">
                   {submission.display_id}
                 </span>
               </div>
 
               {/* Submission Date */}
-              <div className="flex items-center flex-col text-xs text-text/60">
+              <div className="flex items-center flex-col text-xs text-text/60 w-20 truncate">
                 {/* Date */}
                 <span>{date}</span>
 
@@ -69,7 +72,7 @@ function SubmissionsTable({ type, problemId }: Props) {
 
               {/* username */}
               {/* TODO: Add user based styling */}
-              <span className="text-text/60">
+              <span className="text-text/60 w-30 truncate">
                 {submission?.profiles?.username?.charAt(0)}
                 <span className="text-orange-500">
                   {submission?.profiles?.username?.slice(1)}
@@ -77,7 +80,9 @@ function SubmissionsTable({ type, problemId }: Props) {
               </span>
 
               {/* problem title */}
-              <span className="text-text/60">{submission.problems?.name}</span>
+              <span className="text-text/60 w-20 truncate">
+                {submission.problems?.name}
+              </span>
 
               {/* Ans */}
               <span
@@ -110,7 +115,11 @@ function SubmissionsTable({ type, problemId }: Props) {
         })
       ) : (
         <div className="flex items-center justify-center w-full h-full my-5">
-          <p>You don't have any submissions for this problem yet!</p>
+          {loading ? (
+            <p>loading...</p>
+          ) : (
+            <p>There are no submissins for this problem yet!</p>
+          )}
         </div>
       )}
     </>

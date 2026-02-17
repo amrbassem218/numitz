@@ -94,6 +94,9 @@ const Problem_Statement_card = ({
           profiles: {
             username: userProfile.username,
           },
+          problems: {
+            name: problemCore.name,
+          },
           created_at: new Date(),
         };
         updateSubmission(submission_data);
