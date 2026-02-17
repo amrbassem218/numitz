@@ -40,3 +40,10 @@ export const getFormattedDate = (date?: string | Date) => {
     fullDate: fullDate,
   };
 };
+
+export const generateId = (length = 8) => {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from(crypto.getRandomValues(new Uint8Array(length)))
+    .map((b) => chars[b % chars.length])
+    .join("");
+};

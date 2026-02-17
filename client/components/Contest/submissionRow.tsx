@@ -48,9 +48,9 @@ function SubmissionsTable({ type, problemId }: Props) {
               )}
             >
               {/* Submission Id  */}
-              <div className="border border-muted-foreground/20 px-2 text-sm  rounded-md">
-                <span className="underline text-primary text-base">
-                  {submission.id}0000
+              <div className="border border-muted-foreground/20 px-2 text-center rounded-md w-24">
+                <span className="underline text-primary text-sm">
+                  {submission.display_id}
                 </span>
               </div>
 

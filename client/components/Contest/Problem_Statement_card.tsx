@@ -30,8 +30,9 @@ import * as z from "zod";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { toast } from "sonner";
 import { useUser } from "@/app/hooks/useUser";
-import { useProblems, useShownProblemId } from "@/app/store";
+import { useProblems, useProfile, useShownProblemId } from "@/app/store";
 import { ScrollArea } from "../ui/scroll-area";
+import { generateId } from "@/lib/utils";
 interface Props {
   problemsStatus: Record<string, string>;
   setProblemsStatus: Dispatch<SetStateAction<Record<string, string>>>;
@@ -60,7 +61,7 @@ const Problem_Statement_card = ({
       answer: "",
     },
   });
-  const { user } = useUser();
+  const userProfile = useProfile((state) => state.userProfile);
   const shownProblemId = useShownProblemId((state) => state.shownProblemId);
   const problemCore = useProblems(
     (state) => state.problems[shownProblemId]?.core,
@@ -78,7 +79,7 @@ const Problem_Statement_card = ({
     if (user_answer) {
       saveInputToLocalStorage(user_answer);
       // validation
-      if (problemCore?.answer && problemCore.id && user?.id) {
+      if (problemCore?.answer && problemCore.id && userProfile?.id) {
         let status: ProblemStatus = "idle";
         if (user_answer === problemCore.answer) {
           status = "success";
@@ -86,14 +87,19 @@ const Problem_Statement_card = ({
           status = "failure";
         }
         const submission_data = {
+          display_id: generateId(),
           problem_id: shownProblemId,
           user_answer,
           status,
+          profiles: {
+            username: userProfile.username,
+          },
+          created_at: new Date(),
         };
         updateSubmission(submission_data);
         axios
           .post(
-            `/api/problems/${problemCore.id}/submissions/${user.id}`,
+            `/api/problems/${problemCore.id}/submissions/${userProfile.id}`,
             submission_data,
           )
           .then((res) => {

@@ -71,6 +71,7 @@ export interface Submission {
   created_at: Date;
   problem_id?: string;
   user_id?: string;
+  display_id?: string;
   user_answer?: string;
   status?: ProblemStatus;
   problems?: {
@@ -108,7 +109,11 @@ export interface Difficulty {
   min: number;
 }
 
-export type SubmissionsTypes =
-  | "your_submissions"
-  | "general_submissions"
-  | "friends_submissions";
+export const SUBMISSION_TYPES = [
+  "your_submissions",
+  "general_submissions",
+  "friends_submissions",
+] as const;
+
+// Derive the type from the array
+export type SubmissionsTypes = (typeof SUBMISSION_TYPES)[number];

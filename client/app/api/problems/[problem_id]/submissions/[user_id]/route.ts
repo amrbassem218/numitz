@@ -40,8 +40,15 @@ export async function POST(
   try {
     const body = await request.json();
     const { problem_id, user_id } = await params;
-    const { user_answer, status } = body;
-    if (!body || !user_id || !problem_id || !user_answer || !status) {
+    const { user_answer, status, display_id } = body;
+    if (
+      !body ||
+      !user_id ||
+      !problem_id ||
+      !display_id ||
+      !user_answer ||
+      !status
+    ) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         {
@@ -60,7 +67,10 @@ export async function POST(
         problem_id,
         user_answer,
         status,
-      });
+        display_id,
+      })
+      .select("*, problems(name), profiles(username)")
+      .single();
     if (submissionError) {
       return new Response(JSON.stringify({ error: submissionError.message }), {
         status: 500,

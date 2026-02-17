@@ -4,6 +4,7 @@ import {
   ProblemCore,
   ProblemStatus,
   Submission,
+  SUBMISSION_TYPES,
   SubmissionsTypes,
   UserProfile,
 } from "@/types/types";
@@ -153,10 +154,7 @@ interface ContestProblemsContext {
     problemId: string,
     type?: SubmissionsTypes,
   ) => Promise<void>;
-  updateProblemSubmissions: (
-    submission: Submission,
-    type?: SubmissionsTypes,
-  ) => void;
+  updateProblemSubmissions: (submission: Submission) => void;
 }
 export const useProblems = create<ContestProblemsContext>((set, get) => ({
   problems: {},
@@ -282,6 +280,7 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
           }
         }
         //TODO: Implement one for Friends Submissions
+
         submissions = submissions.map((submission) => {
           return {
             ...submission,
@@ -312,32 +311,33 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
     }
   },
 
-  updateProblemSubmissions: (
-    submission: Submission,
-    type?: SubmissionsTypes,
-  ) => {
+  updateProblemSubmissions: (submission: Submission) => {
     if (submission) {
       try {
         let { problem_id: problemId } = submission;
-        if (problemId && type) {
-          let submissionsToUpdate =
-            get().problems[problemId].submissions[type] ?? [];
+        submission.formattedDate = getFormattedDate(submission.created_at);
+        if (problemId) {
+          console.log("submission: ", submission);
+          SUBMISSION_TYPES.forEach((t) => {
+            let submissionsToUpdate =
+              get().problems[problemId].submissions[t] ?? [];
 
-          if (submissionsToUpdate) {
-            submissionsToUpdate.unshift(submission);
-            set((state) => ({
-              problems: {
-                ...state.problems,
-                [problemId]: {
-                  ...state.problems[problemId],
-                  submissions: {
-                    ...state.problems[problemId].submissions,
-                    [type]: submissionsToUpdate,
+            if (submissionsToUpdate) {
+              submissionsToUpdate.unshift(submission);
+              set((state) => ({
+                problems: {
+                  ...state.problems,
+                  [problemId]: {
+                    ...state.problems[problemId],
+                    submissions: {
+                      ...state.problems[problemId].submissions,
+                      [t]: submissionsToUpdate,
+                    },
                   },
                 },
-              },
-            }));
-          }
+              }));
+            }
+          });
         }
       } catch (error) {
         console.error("Failed to fetch submissions:", error);
