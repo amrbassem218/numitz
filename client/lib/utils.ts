@@ -49,3 +49,14 @@ export const generateId = (length = 8) => {
 };
 
 export const HEADER_MARGIN = 56;
+
+export const styleUsername = (username: string, color: string) => {
+  return `
+    <span
+      className='text-base text-text'
+    >
+      ${username.charAt(0)}
+      <span className=${color}>${username.slice(1)}</span>
+    </span>
+`;
+};

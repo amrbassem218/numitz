@@ -41,7 +41,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function RankingDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -73,10 +73,6 @@ export function DataTable<TData, TValue>({
       if (meth !== usedSortingMethod) {
         setUsedSortingMehtod(meth);
       }
-      // if (meth.toLowerCase() === "difficulty") {
-      //
-      // } else if (meth.toLowerCase() === "precentage_solved") {
-      // }
       if (meth.toLowerCase() !== "custom") {
         table.getColumn(meth)?.toggleSorting();
       }
@@ -128,7 +124,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="border-none h-12 cursor-pointer"
+                  className="border-none border border_green-500 h-12 cursor-pointer"
                   // TODO: Figure out the problem rerouting architecture
                   onClick={() => router.push(`/`)}
                 >
@@ -136,7 +132,8 @@ export function DataTable<TData, TValue>({
                     <TableCell
                       key={cell.id}
                       className={cn(
-                        i % 2 === 0 && "bg-bg",
+                        "max-w-fit",
+                        i % 2 === 0 && "bg-bg-light",
                         j == row.getVisibleCells().length - 1 && "rounded-r-md",
                         j == 0 && "rounded-l-md",
                         "",

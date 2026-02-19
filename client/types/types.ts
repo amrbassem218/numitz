@@ -1,3 +1,5 @@
+import { MdOutlineRemoveShoppingCart } from "react-icons/md";
+
 export const contestProblemDefaultValues = {
   id: "",
   name: "",
@@ -119,3 +121,102 @@ export const SUBMISSION_TYPES = [
 export type SubmissionsTypes = (typeof SUBMISSION_TYPES)[number];
 
 export type HeaderType = "short" | "long" | "contest";
+
+export type Ranking_title =
+  | "Legendary Grand Master"
+  | "Grand Master"
+  | "International Master"
+  | "Master"
+  | "Candidate Master"
+  | "Expert"
+  | "Specialist"
+  | "Pupil"
+  | "Newbie"
+  | "UnRated";
+
+export type Ranking_title_short =
+  | "LGM"
+  | "GM"
+  | "IM"
+  | "M"
+  | "CM"
+  | "Exp"
+  | "Spc"
+  | "Ppl"
+  | "Nbe"
+  | "UnR";
+
+export interface Ranking {
+  title?: Ranking_title;
+  title_short?: Ranking_title_short;
+  rating?: number;
+  color: string;
+}
+
+export const rankingsList: Ranking[] = [
+  {
+    title: "Legendary Grand Master",
+    title_short: "LGM",
+    rating: 3000,
+    color: "text-red-700",
+  },
+  {
+    title: "Grand Master",
+    title_short: "GM",
+    rating: 2700,
+    color: "text-red-500",
+  },
+  {
+    title: "International Master",
+    title_short: "IM",
+    rating: 2500,
+    color: "text-orange-500",
+  },
+  {
+    title: "Master",
+    title_short: "M",
+    rating: 2200,
+    color: "text-yellow-500",
+  },
+  {
+    title: "Candidate Master",
+    title_short: "CM",
+    rating: 2000,
+    color: "text-purple-500",
+  },
+  {
+    title: "Expert",
+    title_short: "Exp",
+    rating: 1700,
+    color: "text-blue-500",
+  },
+  {
+    title: "Specialist",
+    title_short: "Spc",
+    rating: 1500,
+    color: "text-cyan-500",
+  },
+  {
+    title: "Pupil",
+    title_short: "Ppl",
+    rating: 1200,
+    color: "text-green-500",
+  },
+  {
+    title: "Newbie",
+    title_short: "Nbe",
+    rating: 0,
+    color: "text-gray-500",
+  },
+  {
+    title: "UnRated",
+    title_short: "UnR",
+    rating: 0,
+    color: "text-gray-700",
+  },
+];
+// export interface Ranking {
+//   ranking_title: Ranking_title;
+//   ranking_title_short: Ranking_title_short;
+//   minRating:
+// }
