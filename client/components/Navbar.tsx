@@ -56,19 +56,34 @@ const Navbar = ({ type }: Props) => {
         </div>
       </div>
 
-      <div className="hidden lg:flex items-center gap-4 w-1/4">
+      <div className="hidden lg:flex items-center gap-4">
         <Input placeholder="Search for something..." />
-        <Settings />
-        {userProfile ? (
+        <button disabled>
+          <Settings className="w-4 h-4" />
+        </button>
+        {userProfile?.id ? (
           <div className="w-10 h-10 rounded-full bg-primary flex justify-center items-center uppercase text-white text-sm font-bold cursor-pointer">
             {userProfile.username
               ? userProfile.username.charAt(0).toUpperCase()
               : ""}
           </div>
         ) : (
-          <Button variant={"primary"} link="/sign_up">
-            Sign Up
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant={"primary"}
+              link="/sign_up"
+              className="text-xs py-0"
+            >
+              Sign Up
+            </Button>
+            <Button
+              variant={"outline"}
+              link="/sign_in"
+              className="text-xs py-2"
+            >
+              Sign in
+            </Button>
+          </div>
         )}
         <Button
           variant={"outline"}

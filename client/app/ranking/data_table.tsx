@@ -84,7 +84,7 @@ export function RankingDataTable<TData, TValue>({
         {/* Searching */}
         <div className="flex items-center py-4">
           <Input
-            placeholder="Search Problem..."
+            placeholder="Search User..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
@@ -124,7 +124,7 @@ export function RankingDataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="border-none border border_green-500 h-12 cursor-pointer"
+                  className="border-none h-12 cursor-pointer"
                   // TODO: Figure out the problem rerouting architecture
                   onClick={() => router.push(`/`)}
                 >

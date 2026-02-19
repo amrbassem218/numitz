@@ -14,10 +14,12 @@ import { HEADER_MARGIN } from "@/lib/utils";
 export default function LearningDashboard() {
   const problems = [
     {
-      id: "2412D",
+      id: "ce985cb6-555a-4db0-b60b-67a230d76ed1",
+      shownId: "2412D",
       name: "Euclidean Theory",
       precentage_solved: 84.2,
       difficulty: "Hard",
+      contestId: "93ad77b8-2b6e-49f7-a0b9-796efa0f08fb",
       topics: [
         "calc ||",
         "Algebra",
@@ -28,10 +30,12 @@ export default function LearningDashboard() {
       ],
     },
     {
-      id: "412C",
+      id: "ce985cb6-555a-4db0-b60b-67a230d76ed1",
+      shownId: "412C",
       name: "Pythagoras Game",
       precentage_solved: 94.2,
       difficulty: "medium",
+      contestId: "93ad77b8-2b6e-49f7-a0b9-796efa0f08fb",
       topics: [
         "calc ||",
         "Algebra",
@@ -42,10 +46,12 @@ export default function LearningDashboard() {
       ],
     },
     {
-      id: "712A",
+      shownId: "712A",
+      id: "ce985cb6-555a-4db0-b60b-67a230d76ed1",
       name: "Newton and rough planes",
       precentage_solved: 24.2,
       difficulty: "Easy",
+      contestId: "93ad77b8-2b6e-49f7-a0b9-796efa0f08fb",
       topics: [
         "calc ||",
         "Algebra",
@@ -56,11 +62,13 @@ export default function LearningDashboard() {
       ],
     },
     {
-      id: "412C",
+      shownId: "412C",
+      id: "ce985cb6-555a-4db0-b60b-67a230d76ed1",
       name: "Einstein fights Newton",
       precentage_solved: 54.2,
       difficulty: "Hard",
 
+      contestId: "93ad77b8-2b6e-49f7-a0b9-796efa0f08fb",
       topics: [
         "calc ||",
         "Algebra",
@@ -210,7 +218,6 @@ export default function LearningDashboard() {
             </button>
           </div>
         </div>
-
         <div className="space-y-1.5">
           <DataTable columns={columns} data={problems} />
         </div>

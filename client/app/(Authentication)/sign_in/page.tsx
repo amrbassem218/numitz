@@ -29,6 +29,7 @@ import { signIn } from "../utils";
 import { FaXTwitter } from "react-icons/fa6";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { HEADER_MARGIN } from "@/lib/utils";
 export default function Page() {
   const router = useRouter();
   const schema = z.object({
@@ -52,7 +53,7 @@ export default function Page() {
   const onSubmit = async (data: z.infer<typeof schema>) => {
     try {
       const res = await axios.post("/api/auth/signin/email_and_password", data);
-      
+
       // Set the session on the client side
       if (res.data.session) {
         const { error: sessionError } = await supabase.auth.setSession({
@@ -67,7 +68,9 @@ export default function Page() {
         }
 
         // Verify the session was set
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        const {
+          data: { session: currentSession },
+        } = await supabase.auth.getSession();
         if (currentSession) {
           toast.success("Successfully signed in!");
           // Redirect to home page or dashboard
@@ -89,7 +92,10 @@ export default function Page() {
     }
   };
   return (
-    <main className="h-screen flex justify-center items-center max-w-[1444]! px-0">
+    <main
+      className="flex justify-center items-center max-w-[1444]! px-0"
+      style={{ height: `calc(100vh - ${HEADER_MARGIN}px)` }}
+    >
       <section className="w-full lg:w-2/4 px-5 md:px-10 max-w-4xl my-auto ">
         {/* Heading */}
         <div>
@@ -114,8 +120,7 @@ export default function Page() {
             className="flex justify-center items-center gap-3 bg-card"
             onClick={() => signIn("x")}
           >
-            <FaXTwitter className="w-12 h-12 text-text" />
-           X / Twitter 
+            <FaXTwitter className="w-12 h-12 text-text" />X / Twitter
           </Button>
         </section>
         {/* Or */}
@@ -129,7 +134,10 @@ export default function Page() {
         </div>
         {/* sign Up with Email */}
 
-        <form className="max-w-2xl mx-auto flex flex-col gap-5" onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="max-w-2xl mx-auto flex flex-col gap-5"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <Controller
             name="usernameOrEmail"
             control={form.control}

@@ -50,7 +50,7 @@ export default function Page() {
   return (
     <main
       style={{ height: `calc(100vh - ${HEADER_MARGIN}px)` }}
-      className="w-full max-w-300 h-full pt-10 border grid grid-cols-12 gap-10   h-full"
+      className="w-full max-w-300 h-full pt-10 grid grid-cols-12 gap-10   h-full"
     >
       <Card className="col-span-8">
         <CardHeader>
@@ -66,15 +66,26 @@ export default function Page() {
         </CardContent>
       </Card>
 
-      <Card className="col-span-4">
-        <CardHeader>
-          <CardTitle>Options</CardTitle>
-          {/* TODO: Add actual description */}
-          <CardDescription>
-            Change options to change what you see here :)
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <div className="flex flex-col gap-5 col-span-4 ">
+        <Card className="w-full h-60">
+          <CardHeader>
+            <CardTitle>Options</CardTitle>
+            {/* TODO: Add actual description */}
+            <CardDescription>
+              Change options to change what you see here :)
+            </CardDescription>
+          </CardHeader>
+        </Card>
+        <Card className="col-span-4 w-full flex-1">
+          <CardHeader>
+            <CardTitle>Options</CardTitle>
+            {/* TODO: Add actual description */}
+            <CardDescription>
+              Change options to change what you see here :)
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
     </main>
   );
 }

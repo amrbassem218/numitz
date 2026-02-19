@@ -6,6 +6,8 @@ import { contestProblem, Difficulty } from "@/types/types";
 import { ColumnDef } from "@tanstack/react-table";
 export interface ProblemSetProblem {
   id: string;
+  shownId: string;
+  contestId?: string;
   name: string;
   precentage_solved: number;
   difficulty: string;
@@ -16,7 +18,9 @@ export const columns: ColumnDef<ProblemSetProblem>[] = [
     accessorKey: "id",
     header: "Id",
     cell: ({ row }) => {
-      return <span className="underline text-primary">{row.original.id}</span>;
+      return (
+        <span className="underline text-primary">{row.original.shownId}</span>
+      );
     },
   },
   {

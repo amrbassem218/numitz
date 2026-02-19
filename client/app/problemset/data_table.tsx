@@ -128,9 +128,13 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="border-none h-12 cursor-pointer"
+                  className="border-none h-12 cursor-pointer hover:bg-bg-light transition-all transition-1"
                   // TODO: Figure out the problem rerouting architecture
-                  onClick={() => router.push(`/`)}
+                  onClick={() =>
+                    router.push(
+                      `/contests/93ad77b8-2b6e-49f7-a0b9-796efa0f08fb?problemId=ce985cb6-555a-4db0-b60b-67a230d76ed1`,
+                    )
+                  }
                 >
                   {row.getVisibleCells().map((cell, j) => (
                     <TableCell

@@ -30,6 +30,7 @@ import { TiTick } from "react-icons/ti";
 import axios from "axios";
 import { debouncedIsUsernameUnique, signIn } from "../utils";
 import { FaSquareXTwitter, FaXTwitter } from "react-icons/fa6";
+import { HEADER_MARGIN } from "@/lib/utils";
 export default function Page() {
   const schema = z
     .object({
@@ -55,7 +56,7 @@ export default function Page() {
       message: "Passwords don't match",
       path: ["confirmPassword", "password"],
     });
-  const isUsernameUnique = useMemo(() => debouncedIsUsernameUnique(), [])
+  const isUsernameUnique = useMemo(() => debouncedIsUsernameUnique(), []);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -93,7 +94,10 @@ export default function Page() {
     }
   }, [usernameExists]);
   return (
-    <main className="h-screen flex justify-center items-center max-w-[1444]! px-0 ">
+    <main
+      className="flex justify-center items-center max-w-[1444]! px-0 "
+      style={{ height: `calc(100vh - ${HEADER_MARGIN}px)` }}
+    >
       <section className="w-full lg:w-2/4 px-5 md:px-10 max-w-4xl my-auto">
         {/* Heading */}
         <div>
@@ -118,8 +122,7 @@ export default function Page() {
             className="flex justify-center items-center gap-3 bg-card"
             onClick={() => signIn("x")}
           >
-            <FaXTwitter className="w-12 h-12 text-text" />
-           X / Twitter 
+            <FaXTwitter className="w-12 h-12 text-text" />X / Twitter
           </Button>
         </section>
 
