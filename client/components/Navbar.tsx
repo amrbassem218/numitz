@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useProfile } from "@/app/store";
 import { Input } from "./ui/input";
 import { HeaderType } from "@/types/types";
+import { IoSearch } from "react-icons/io5";
 interface Props {
   type: HeaderType;
 }
@@ -18,6 +19,11 @@ const Navbar = ({ type }: Props) => {
   useEffect(() => {
     console.log("userprofile: ", userProfile);
   }, [userProfile]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const handleSearch = () => {
+    router.push(`/problemset?query=${searchQuery}`);
+  };
   return (
     <nav
       className={`fixed top-0 left-0 w-full px-4 py-2 flex  ${type === "short" ? "justify-around" : type === "long" ? "justify-between" : ""} items-center gap-5 z-50 bg-bg-dark`}
@@ -57,7 +63,20 @@ const Navbar = ({ type }: Props) => {
       </div>
 
       <div className="hidden lg:flex items-center gap-4">
-        <Input placeholder="Search for something..." />
+        <form className="relative" onSubmit={() => handleSearch()}>
+          <Input
+            placeholder="Search for something..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {/* TODO: Replace with search icon  */}
+          <button
+            type="submit"
+            className="bg-primary flex items-center justify-center rounded-md absolute right-0 top-0 p-2 h-full"
+          >
+            <IoSearch className="" />
+          </button>
+        </form>
         <button disabled>
           <Settings className="w-4 h-4" />
         </button>

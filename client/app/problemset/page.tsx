@@ -11,6 +11,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { DataTable } from "./data_table";
 import { columns } from "./columns";
 import { HEADER_MARGIN } from "@/lib/utils";
+import { toast } from "sonner";
 export default function LearningDashboard() {
   const problems = [
     {
@@ -97,6 +98,7 @@ export default function LearningDashboard() {
       value: "library",
       label: "Library",
       icon: IoFolderOpen,
+      availabe: true,
     },
     {
       value: "challenges",
@@ -107,11 +109,13 @@ export default function LearningDashboard() {
         name: "New",
         colorStyling: "bg-primary text-text",
       },
+      availabe: false,
     },
     {
       value: "courses",
       label: "Courses",
       icon: FaGraduationCap,
+      availabe: false,
     },
   ];
   const [activeMainTab, setActiveMainTab] = useState<string>(
@@ -138,6 +142,7 @@ export default function LearningDashboard() {
                   <TabsTrigger
                     value={tab.value}
                     className={`w-full rounded-sm px-4 flex justify-start flex justify-between  ${activeMainTab == tab.value ? "bg-bg-light font-semibold" : "bg-transparent opacity-90 font-thin!"}`}
+                    disabled
                   >
                     <div className="flex items-center gap-2">
                       <tab.icon className="text-text w-4 h-4" />
@@ -145,11 +150,11 @@ export default function LearningDashboard() {
                         {tab.label}
                       </h2>
                     </div>
-                    {tab?.announcementExists && (
+                    {tab?.availabe == false && (
                       <div
-                        className={`px-4 py-1 rounded-lg flex items justify-between ${tab.announcement.colorStyling}`}
+                        className={`px-2 py-1 rounded-lg flex items justify-between bg-primary`}
                       >
-                        <span> {tab.announcement.name}</span>
+                        <span>Soon</span>
                       </div>
                     )}
                   </TabsTrigger>
@@ -189,8 +194,12 @@ export default function LearningDashboard() {
                 Turn calculus into gamified progress
               </p>
             </div>
-            <button className="mt-6 bg-black text-white px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-800 transition">
-              Start Now
+            {/* TODO: Change back to start  */}
+            <button
+              className="mt-6 bg-black text-white px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-800 transition"
+              onClick={() => toast("RSVP'd to calculus Challenge Successfully")}
+            >
+              RSVP
             </button>
           </div>
 
@@ -199,8 +208,11 @@ export default function LearningDashboard() {
               <h3 className="text-[22px] font-bold">Linear Algebra</h3>
               <p className="text-[14px] mt-2">30 Days Challenge</p>
             </div>
-            <button className="mt-6 bg-white text-blue-600 px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-100 transition">
-              Learn Now
+            <button
+              className="cursor-pointer mt-6 bg-white text-blue-600 px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-100 transition"
+              onClick={() => toast("RSVP'd to 30 Days Challenge Successfully")}
+            >
+              RSVP
             </button>
           </div>
 
@@ -213,8 +225,11 @@ export default function LearningDashboard() {
                 </div>
               </div>
             </div>
-            <button className="mt-6 bg-white text-orange-600 px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-100 transition">
-              Get Started
+            <button
+              className="mt-6 bg-white text-orange-600 px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-100 transition"
+              onClick={() => toast("RSVP'd to SAT Challenge Successfully")}
+            >
+              RSVP
             </button>
           </div>
         </div>

@@ -21,8 +21,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { MdOutlineSort } from "react-icons/md";
 import {
@@ -48,7 +48,8 @@ export function DataTable<TData, TValue>({
   const router = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("query") || null;
   const table = useReactTable({
     data,
     columns,
@@ -73,15 +74,16 @@ export function DataTable<TData, TValue>({
       if (meth !== usedSortingMethod) {
         setUsedSortingMehtod(meth);
       }
-      // if (meth.toLowerCase() === "difficulty") {
-      //
-      // } else if (meth.toLowerCase() === "precentage_solved") {
-      // }
       if (meth.toLowerCase() !== "custom") {
         table.getColumn(meth)?.toggleSorting();
       }
     }
   };
+  useEffect(() => {
+    if (searchQuery) {
+      table.getColumn("name")?.setFilterValue(searchQuery);
+    }
+  }, [searchQuery]);
   return (
     <div>
       <div className="flex items-center gap-2">
