@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import ProblemSetsLeftBarBottomSection from "./leftBarBottomSection";
 import ProblemSetLeftBarTopSection from "./leftBarTopSection";
 import RsvpButton from "@/components/rsvpButton";
+import { Suspense } from "react";
 export default function LearningDashboard() {
   const problems = [
     {
@@ -146,7 +147,9 @@ export default function LearningDashboard() {
           </div>
         </div>
         <div className="space-y-1.5">
-          <DataTable columns={columns} data={problems} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <DataTable columns={columns} data={problems} />
+          </Suspense>
         </div>
 
         <div className=" flex overflow-hidden">
