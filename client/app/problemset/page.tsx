@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Fragment, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { IoFolderOpen } from "react-icons/io5";
+import { IoFolderOpen, IoSearch } from "react-icons/io5";
 import { IoExtensionPuzzle } from "react-icons/io5";
 import { FaGraduationCap } from "react-icons/fa";
 import { useProfile } from "../store";
@@ -12,6 +12,9 @@ import { DataTable } from "./data_table";
 import { columns } from "./columns";
 import { HEADER_MARGIN } from "@/lib/utils";
 import { toast } from "sonner";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 export default function LearningDashboard() {
   const problems = [
     {
@@ -243,53 +246,45 @@ export default function LearningDashboard() {
       </section>
 
       {/* Right side bar */}
-      <aside className="bg-background p-6 hidden xl:block col-span-4 max-w-70 justify-self-end mx-2">
-        <h3 className="font-semibold mb-4 text-[15px]">Weekly Premium</h3>
-        <div className="grid grid-cols-5 gap-2 mb-10">
-          {["W1", "W2", "W3", "W4", "W5"].map((w, i) => (
-            <div
-              key={w}
-              className={`p-3 rounded-xl text-center text-sm font-medium
-                  ${i === 1 ? "bg-blue-600 text-white" : "bg-card "}`}
-            >
-              {w}
+      <aside className="bg-background  py-5 hidden xl:block col-span-4 mr-2 space-y-5">
+        <Card className="gap-0 border-none rounded-md">
+          {/* TODO: Change to actual streak */}
+          <CardHeader className="font-medium flex line-clamp-2">
+            Day 13{" "}
+            <span className="font-normal text-xs text-muted-foreground">
+              (since Sat Feb 7th 2026)
+            </span>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="">
+              <Calendar className="w-full bg-green-500" />
             </div>
-          ))}
-        </div>
-
-        <div className="text-xs text-gray-500 mb-4">
-          <span>0</span>
-          <span className="mx-2">•</span>
-          <span>Incident</span>
-          <span className="mx-2">•</span>
-          <span>Rules</span>
-        </div>
-
-        <h3 className="font-semibold mb-4 text-[15px]">
-          Trending Competitions
-        </h3>
-
-        <div className="mb-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search for competitions..."
-              className="w-full bg-background text-sm py-2 px-4 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          {trendingCompetitions.map((comp, index) => (
-            <div
-              key={index}
-              className="bg-background p-4 rounded-xl flex justify-between items-center hover:bg-card transition-colors"
-            >
-              <span className="text-[14px]">{comp.name}</span>
-              <span className="font-bold text-[15px]">{comp.participants}</span>
+          </CardContent>
+        </Card>
+        <Card className="gap-2 border-none rounded-md">
+          <CardHeader>Trending Competitions</CardHeader>
+          <CardContent>
+            <div className="relative mb-4">
+              {/* Center the icon in absolute mode */}
+              <IoSearch className="absolute left-0 -transform-y-1/2" />
+              <Input
+                type="text"
+                placeholder="Search for competitions..."
+                className="w-full bg-bg-light text-sm py-2 px-4 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
             </div>
-          ))}
-        </div>
+            <div className="flex gap-3 flex-wrap">
+              {trendingCompetitions.map((comp) => (
+                <div className="bg-bg-light px-2 gap-2 py-1 flex items-center justify-between w-fit rounded-md text-text/80">
+                  <span className="text-sm">{comp.name}</span>
+                  <div className="px-2 bg-primary rounded-md text-xs">
+                    <span>{comp.participants}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </aside>
     </main>
   );
