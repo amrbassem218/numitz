@@ -1,8 +1,5 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Fragment, useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IoFolderOpen, IoSearch } from "react-icons/io5";
 import { IoExtensionPuzzle } from "react-icons/io5";
 import { FaGraduationCap } from "react-icons/fa";
@@ -15,6 +12,9 @@ import { toast } from "sonner";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import ProblemSetsLeftBarBottomSection from "./leftBarBottomSection";
+import ProblemSetLeftBarTopSection from "./leftBarTopSection";
+import RsvpButton from "@/components/rsvpButton";
 export default function LearningDashboard() {
   const problems = [
     {
@@ -96,35 +96,6 @@ export default function LearningDashboard() {
     { name: "Kangaroo", participants: "345" },
     { name: "Shabola", participants: "341" },
   ];
-  const activeTabs = [
-    {
-      value: "library",
-      label: "Library",
-      icon: IoFolderOpen,
-      availabe: true,
-    },
-    {
-      value: "challenges",
-      label: "Challenges",
-      icon: IoExtensionPuzzle,
-      announcementExists: true,
-      announcement: {
-        name: "New",
-        colorStyling: "bg-primary text-text",
-      },
-      availabe: false,
-    },
-    {
-      value: "courses",
-      label: "Courses",
-      icon: FaGraduationCap,
-      availabe: false,
-    },
-  ];
-  const [activeMainTab, setActiveMainTab] = useState<string>(
-    activeTabs[0].value,
-  );
-  const user = useProfile((state) => state.user);
   return (
     <main
       style={{ height: `calc(100vh - ${HEADER_MARGIN}px)` }}
@@ -132,58 +103,12 @@ export default function LearningDashboard() {
     >
       {/* Left side bar */}
       <aside className="bg-background hidden xl:block col-span-4 max-w-60 border-r border-foreground/20 px-2 py-2">
-        <div className="flex w-full ">
-          <Tabs
-            defaultValue="problems"
-            className="w-full"
-            value={activeMainTab}
-            onValueChange={setActiveMainTab}
-          >
-            <TabsList className="flex flex-col h-auto gap-2 w-full justify-start rounded-b-none bg-transparent">
-              {activeTabs.map((tab) => (
-                <div className="h-12 w-full">
-                  <TabsTrigger
-                    value={tab.value}
-                    className={`w-full rounded-sm px-4 flex justify-start flex justify-between  ${activeMainTab == tab.value ? "bg-bg-light font-semibold" : "bg-transparent opacity-90 font-thin!"}`}
-                    disabled
-                  >
-                    <div className="flex items-center gap-2">
-                      <tab.icon className="text-text w-4 h-4" />
-                      <h2 className="hidden md:inline text-base xl:text-md">
-                        {tab.label}
-                      </h2>
-                    </div>
-                    {tab?.availabe == false && (
-                      <div
-                        className={`px-2 py-1 rounded-lg flex items justify-between bg-primary`}
-                      >
-                        <span>Soon</span>
-                      </div>
-                    )}
-                  </TabsTrigger>
-                </div>
-              ))}
-            </TabsList>
-          </Tabs>
-        </div>
-
+        <ProblemSetLeftBarTopSection />
         <div className=" flex overflow-hidden my-4 mx-4">
           <Separator className="bg-foreground/20" />
         </div>
 
-        {/* If user is not signed in prompt them to */}
-        {!user && (
-          <section className="w-3/4 mx-auto flex flex-col gap-2 items-center">
-            <p className="text-md text-text font-extralight leading-relaxed text-center">
-              Log in to view lists and track study progress
-            </p>
-
-            <Button className="bg-text text-bg rounded-lg" link="/sign_in">
-              <FaRegUserCircle />
-              Log In
-            </Button>
-          </section>
-        )}
+        <ProblemSetsLeftBarBottomSection />
       </aside>
 
       {/* Main section */}
@@ -198,12 +123,7 @@ export default function LearningDashboard() {
               </p>
             </div>
             {/* TODO: Change back to start  */}
-            <button
-              className="mt-6 bg-black text-white px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-800 transition"
-              onClick={() => toast("RSVP'd to calculus Challenge Successfully")}
-            >
-              RSVP
-            </button>
+            <RsvpButton name="Calculus Challenge" />
           </div>
 
           <div className="bg-linear-to-br from-blue-500 to-blue-600 text-white rounded-2xl p-6 flex flex-col justify-between">
@@ -211,14 +131,8 @@ export default function LearningDashboard() {
               <h3 className="text-[22px] font-bold">Linear Algebra</h3>
               <p className="text-[14px] mt-2">30 Days Challenge</p>
             </div>
-            <button
-              className="cursor-pointer mt-6 bg-white text-blue-600 px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-100 transition"
-              onClick={() => toast("RSVP'd to 30 Days Challenge Successfully")}
-            >
-              RSVP
-            </button>
+            <RsvpButton name="30 Days Challenge " />
           </div>
-
           <div className="bg-linear-to-br from-orange-500 to-orange-600 text-white rounded-2xl p-6 flex flex-col justify-between">
             <div>
               <h3 className="text-[22px] font-bold">Top SAT Questions</h3>
@@ -228,12 +142,7 @@ export default function LearningDashboard() {
                 </div>
               </div>
             </div>
-            <button
-              className="mt-6 bg-white text-orange-600 px-5 py-3 rounded-xl text-sm w-fit hover:bg-gray-100 transition"
-              onClick={() => toast("RSVP'd to SAT Challenge Successfully")}
-            >
-              RSVP
-            </button>
+            <RsvpButton name="SAT Challenge" />
           </div>
         </div>
         <div className="space-y-1.5">
@@ -265,12 +174,12 @@ export default function LearningDashboard() {
           <CardHeader>Trending Competitions</CardHeader>
           <CardContent>
             <div className="relative mb-4">
-              {/* Center the icon in absolute mode */}
-              <IoSearch className="absolute left-0 -transform-y-1/2" />
+              <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+
               <Input
                 type="text"
                 placeholder="Search for competitions..."
-                className="w-full bg-bg-light text-sm py-2 px-4 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-bg-light text-sm py-2 pl-10 pr-4 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
             <div className="flex gap-3 flex-wrap">

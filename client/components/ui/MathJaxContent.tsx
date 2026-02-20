@@ -3,17 +3,17 @@
 import React, { useEffect, useRef } from "react";
 
 // MathJax type declarations
-declare global {
-  interface Window {
-    MathJax?: {
-      typesetPromise?: (elements?: Element[]) => Promise<void>;
-      typeset?: (elements?: Element[]) => void;
-      startup?: {
-        defaultPageReady?: () => Promise<void>;
-      };
-    };
-  }
-}
+// declare global {
+//   interface Window {
+//     MathJax?: {
+//       typesetPromise?: (elements?: Element[]) => Promise<void>;
+//       typeset?: (elements?: Element[]) => void;
+//       startup?: {
+//         defaultPageReady?: () => Promise<void>;
+//       };
+//     };
+//   }
+// }
 
 interface MathJaxContentProps {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ interface MathJaxContentProps {
 /**
  * Wrapper component that automatically renders MathJax content.
  * Use this for static content that doesn't change after initial load.
- * 
+ *
  * @example
  * <MathJaxContent>
  *   <p>The formula $E = mc^2$ is famous.</p>
@@ -61,7 +61,6 @@ export function MathJaxContent({
   return React.createElement(
     Component,
     { ref: contentRef, className },
-    children
+    children,
   );
 }
-

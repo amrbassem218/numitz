@@ -72,7 +72,7 @@ const Navbar = ({ type }: Props) => {
           {/* TODO: Replace with search icon  */}
           <button
             type="submit"
-            className="bg-primary flex items-center justify-center rounded-md absolute right-0 top-0 p-2 h-full"
+            className="bg-primary flex items-center justify-center rounded-md absolute right-0 top-0 p-2  h-full"
           >
             <IoSearch className="" />
           </button>
