@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase/client";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ const isUsernameUnique = async (value: string): Promise<boolean> => {
     return false;
   }
 };
+
 export const debouncedIsUsernameUnique = () => {
   let timeoutId: NodeJS.Timeout;
   let lastPromise: Promise<boolean>;
@@ -38,4 +40,5 @@ export const debouncedIsUsernameUnique = () => {
       }, 500);
     });
   };
-}
+};
+

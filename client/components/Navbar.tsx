@@ -9,6 +9,14 @@ import { useProfile } from "@/app/store";
 import { Input } from "./ui/input";
 import { HeaderType } from "@/types/types";
 import { IoSearch } from "react-icons/io5";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+} from "./ui/dropdown-menu";
 interface Props {
   type: HeaderType;
 }
@@ -19,6 +27,7 @@ const Navbar = ({ type }: Props) => {
   useEffect(() => {
     console.log("userprofile: ", userProfile);
   }, [userProfile]);
+  const signOut = useProfile((state) => state.signOut);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
   const handleSearch = () => {
@@ -69,7 +78,6 @@ const Navbar = ({ type }: Props) => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          {/* TODO: Replace with search icon  */}
           <button
             type="submit"
             className="bg-primary flex items-center justify-center rounded-md absolute right-0 top-0 p-2  h-full"
@@ -80,12 +88,29 @@ const Navbar = ({ type }: Props) => {
         <button disabled>
           <Settings className="w-4 h-4" />
         </button>
+
         {userProfile?.id ? (
-          <div className="w-10 h-10 rounded-full bg-primary flex justify-center items-center uppercase text-white text-sm font-bold cursor-pointer">
-            {userProfile.username
-              ? userProfile.username.charAt(0).toUpperCase()
-              : ""}
-          </div>
+          // TODO: Replace with actual avatar
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <div className="w-10 h-10 rounded-full bg-primary flex justify-center items-center uppercase text-white text-sm font-bold cursor-pointer">
+                {userProfile.username
+                  ? userProfile.username.charAt(0).toUpperCase()
+                  : ""}
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Account</DropdownMenuLabel>
+                <DropdownMenuItem
+                  className="text-danger"
+                  onClick={() => signOut()}
+                >
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <div className="flex items-center gap-2">
             <Button

@@ -16,13 +16,14 @@ import { create } from "zustand";
 
 export interface UserProfileContext {
   user: User | null;
-  userProfile: UserProfile;
+  userProfile: UserProfile | null;
   isWithoutUsername: boolean;
   initialize: () => Promise<void>;
   createProfile: (
     userProfile: UserProfile,
   ) => Promise<{ ok: boolean; error?: string }>;
   updateProfile: (userProfile: UserProfile) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 export const useProfile = create<UserProfileContext>((set, get) => ({
   user: null,
@@ -133,6 +134,12 @@ export const useProfile = create<UserProfileContext>((set, get) => ({
           }
           console.error("Profile update error:", err);
         });
+    }
+  },
+  signOut: async () => {
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      set(() => ({ userProfile: null, user: null }));
     }
   },
 }));
