@@ -23,24 +23,20 @@ export interface UserProfileContext {
     userProfile: UserProfile,
   ) => Promise<{ ok: boolean; error?: string }>;
   updateProfile: (userProfile: UserProfile) => Promise<void>;
+  loading: boolean;
   signOut: () => Promise<void>;
 }
 export const useProfile = create<UserProfileContext>((set, get) => ({
   user: null,
-  userProfile: {
-    id: "",
-    created_at: new Date(),
-    updated_at: new Date(),
-    email: "",
-    first_name: "",
-    last_name: "",
-    username: "",
-    image: "",
-    bio: "",
-  },
+  userProfile: null,
+  loading: false,
   isWithoutUsername: false,
 
   initialize: async () => {
+    set(() => ({
+      loading: true,
+    }));
+
     // Get the user session from Supabase (to get the userID)
     const {
       data: { user },
@@ -48,6 +44,8 @@ export const useProfile = create<UserProfileContext>((set, get) => ({
     } = await supabase.auth.getUser();
     if (userError || !user) {
       console.error("Error fetching auth user:", userError);
+
+      set(() => ({ loading: false }));
       return;
     }
     set(() => ({ user }));
@@ -67,13 +65,14 @@ export const useProfile = create<UserProfileContext>((set, get) => ({
         set(() => ({ isWithoutUsername: true }));
         redirect("/get_username");
       }
+      set(() => ({ loading: false }));
       return;
     }
 
     // If no Errors set userprofile
     set(() => ({ userProfile }));
     set(() => ({ isWithoutUsername: false }));
-
+    set(() => ({ loading: false }));
     // Listen for auth changes
     supabase.auth.onAuthStateChange((e, session) => {
       set(() => ({ user: session?.user ?? null }));
@@ -136,6 +135,7 @@ export const useProfile = create<UserProfileContext>((set, get) => ({
         });
     }
   },
+
   signOut: async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
@@ -158,9 +158,9 @@ interface ContestProblemsContext {
   problems: Record<string, Problem>;
   fetchCore: (problemId: string) => Promise<void>;
   fetchProblemSubmissions: (
-    userId: string,
     problemId: string,
     type?: SubmissionsTypes,
+    userId?: string,
   ) => Promise<void>;
   updateProblemSubmissions: (submission: Submission) => void;
 }
@@ -241,9 +241,9 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
   },
   // Fetch user submitted Submissions of a problem
   fetchProblemSubmissions: async (
-    userId: string,
     problemId: string,
     type?: SubmissionsTypes,
+    userId?: string,
   ) => {
     try {
       // check if it's saved
@@ -267,12 +267,13 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
           const isLoading = state.problems[problemId]?.coreLoading;
           if (!isLoading && wasLoading) {
             unsubscribe();
-            get().fetchProblemSubmissions(userId, problemId);
+            get().fetchProblemSubmissions(problemId, type, userId);
           }
         });
       }
       if (type) {
         let submissions: Submission[] = [];
+
         if (type === "general_submissions") {
           try {
             const res = await axios.get(
@@ -288,12 +289,14 @@ export const useProblems = create<ContestProblemsContext>((set, get) => ({
           }
         } else if (type === "your_submissions") {
           try {
-            const res = await axios(
-              `/api/problems/${problemId}/submissions/${userId}`,
-            );
-            if (res) {
-              submissions = res.data;
-            }
+            if (userId) {
+              const res = await axios(
+                `/api/problems/${problemId}/submissions/${userId}`,
+              );
+              if (res) {
+                submissions = res.data;
+              }
+            } else throw "User is not authenticated";
           } catch (err) {
             console.error("Error while fetching submissions: ", err);
           }

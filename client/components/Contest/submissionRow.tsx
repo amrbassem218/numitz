@@ -1,4 +1,4 @@
-import { useProblems, useProfile } from "@/app/store";
+import { useProblems, useProfile, useShownProblemId } from "@/app/store";
 import { cn } from "@/lib/utils";
 import {
   defaultFormattedDate,
@@ -7,30 +7,38 @@ import {
 } from "@/types/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 
 interface Props {
   type: SubmissionsTypes;
-  problemId: string;
 }
 
-function SubmissionsTable({ type, problemId }: Props) {
+function SubmissionsTable({ type }: Props) {
   const userProfile = useProfile((state) => state.userProfile);
+  const userProfileLoading = useProfile((state) => state.loading);
   const submissionsFetch = useProblems(
     (state) => state.fetchProblemSubmissions,
   );
   const EMPTY_ARRAY: Submission[] = [];
+  const problemId = useShownProblemId((state) => state.shownProblemId);
   const submissions = useProblems((state) => {
     const submissions = state.problems[problemId]?.submissions;
     return (submissions && submissions[type]) ?? EMPTY_ARRAY;
   });
-  const loading = useProblems(
+  const SubmissionsLoading = useProblems(
     (state) => state.problems[problemId]?.submissions?.loading ?? true,
   );
+
   useEffect(() => {
-    if (type && problemId && userProfile.id) {
-      submissionsFetch(userProfile.id, problemId, type);
+    if (type && problemId) {
+      submissionsFetch(problemId, type, userProfile?.id);
     }
   }, [type, problemId, userProfile]);
+  useEffect(() => {
+    console.log("userProfileLoading: ", userProfileLoading);
+    console.log("userProfile_w: ", userProfile);
+  }, [userProfileLoading]);
   useEffect(() => {
     if (submissions) {
       console.log("submissions changed!!!");
@@ -115,7 +123,36 @@ function SubmissionsTable({ type, problemId }: Props) {
         })
       ) : (
         <div className="flex items-center justify-center w-full h-full my-5">
-          {loading ? (
+          {!userProfileLoading &&
+          !userProfile &&
+          (type === "your_submissions" || type === "friends_submissions") ? (
+            <div className="flex items-center flex-col gap-3">
+              <div>
+                <h4>You're not Signed in</h4>
+                <span className="text-muted-foreground">
+                  pls login or sign up to view submissions{" "}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={"primary"}
+                  link="/sign_up"
+                  className="text-xs py-0"
+                >
+                  Sign Up
+                </Button>
+                <Button
+                  variant={"outline"}
+                  link="/sign_in"
+                  className="text-xs py-2"
+                >
+                  Sign in
+                </Button>
+              </div>
+              {/* <Separator className="my-3" /> */}
+              {/* <span>See General Submission</span> */}
+            </div>
+          ) : SubmissionsLoading ? (
             <p>loading...</p>
           ) : (
             <p>There are no submissins for this problem yet!</p>

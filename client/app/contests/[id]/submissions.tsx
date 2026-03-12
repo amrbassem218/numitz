@@ -1,4 +1,3 @@
-"use client";
 import { useUser } from "@/app/hooks/useUser";
 import { useProblems, useProfile, useShownProblemId } from "@/app/store";
 import SubmissionsTable from "@/components/Contest/submissionRow";
@@ -16,19 +15,6 @@ interface ContestSubmissionsProps {}
 const ContestSubmissions: React.FunctionComponent<ContestSubmissionsProps> = (
   props,
 ) => {
-  const shownProblemId = useShownProblemId((state) => state.shownProblemId);
-  const yourSubmissions = useProblems(
-    (state) => state.problems[shownProblemId]?.submissions,
-  );
-  const userProfile = useProfile((state) => state.userProfile);
-  useEffect(() => {
-    if (userProfile && userProfile?.id && shownProblemId) {
-      useProblems
-        .getState()
-        .fetchProblemSubmissions(userProfile.id, shownProblemId);
-    }
-  }, [userProfile, shownProblemId]);
-
   return (
     <TabsContent
       value="submissions"
@@ -49,17 +35,11 @@ const ContestSubmissions: React.FunctionComponent<ContestSubmissionsProps> = (
           </TabsList>
 
           <TabsContent value="your_submissions">
-            <SubmissionsTable
-              problemId={shownProblemId}
-              type="your_submissions"
-            />
+            <SubmissionsTable type="your_submissions" />
           </TabsContent>
 
           <TabsContent value="general_submissions">
-            <SubmissionsTable
-              problemId={shownProblemId}
-              type="general_submissions"
-            />
+            <SubmissionsTable type="general_submissions" />
           </TabsContent>
         </Tabs>
       </ScrollArea>
