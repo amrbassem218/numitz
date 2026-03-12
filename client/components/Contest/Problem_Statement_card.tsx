@@ -33,6 +33,7 @@ import { useUser } from "@/app/hooks/useUser";
 import { useProblems, useProfile, useShownProblemId } from "@/app/store";
 import { ScrollArea } from "../ui/scroll-area";
 import { generateId } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 interface Props {
   problemsStatus: Record<string, string>;
   setProblemsStatus: Dispatch<SetStateAction<Record<string, string>>>;
@@ -66,6 +67,7 @@ const Problem_Statement_card = ({
   const problemCore = useProblems(
     (state) => state.problems[shownProblemId]?.core,
   );
+  const router = useRouter();
   const updateSubmission = useProblems(
     (state) => state.updateProblemSubmissions,
   );
@@ -79,7 +81,18 @@ const Problem_Statement_card = ({
     if (user_answer) {
       saveInputToLocalStorage(user_answer);
       // validation
-      if (problemCore?.answer && problemCore.id && userProfile?.id) {
+      if (!userProfile?.id) {
+        toast("You need to sign up first before submitting", {
+          action: {
+            label: "Signup",
+            onClick: () => router.push("/sign_up"),
+          },
+          cancel: {
+            label: "Login",
+            onClick: () => router.push("/sign_in"),
+          },
+        });
+      } else if (problemCore?.answer && problemCore.id) {
         let status: ProblemStatus = "idle";
         if (user_answer === problemCore.answer) {
           status = "success";
