@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 import NavigationListener from "@/components/navigationListener";
 import localFont from "next/font/local";
 import ContentLayout from "@/components/contentLayout";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
