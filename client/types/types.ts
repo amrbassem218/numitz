@@ -40,6 +40,7 @@ export interface Contest {
   end_date: Date;
   start_date: Date;
   created_at: Date;
+  length_in_minutes: number;
 }
 
 export interface UserProfile {

@@ -165,7 +165,7 @@ export default function Page() {
   return (
     <main className="h-screen! max-h-screen! max-w-full! px-1 flex flex-col py-1">
       {/* Contest Header */}
-      <ContestHeader />
+      <ContestHeader length_in_minutes={contest.length_in_minutes} />
 
       {/* Problems Navigator for phones */}
       {isMobile && (
