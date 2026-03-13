@@ -6,15 +6,17 @@ import {
   SubmissionsTypes,
 } from "@/types/types";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import { useRouter } from "next/navigation";
 
 interface Props {
   type: SubmissionsTypes;
+  setSubmissionType: Dispatch<SetStateAction<string>>;
 }
 
-function SubmissionsTable({ type }: Props) {
+function SubmissionsTable({ type, setSubmissionType }: Props) {
   const userProfile = useProfile((state) => state.userProfile);
   const userProfileLoading = useProfile((state) => state.loading);
   const submissionsFetch = useProblems(
@@ -126,12 +128,20 @@ function SubmissionsTable({ type }: Props) {
           {!userProfileLoading &&
           !userProfile &&
           (type === "your_submissions" || type === "friends_submissions") ? (
-            <div className="flex items-center flex-col gap-3">
-              <div>
+            <div className="flex items-center text-center flex-col gap-3">
+              <div className="space-y-2">
                 <h4>You're not Signed in</h4>
-                <span className="text-muted-foreground">
-                  pls login or sign up to view submissions{" "}
-                </span>
+                <div className="flex items-center gap-1">
+                  <span className="text-muted-foreground">
+                    pls login or sign up to view your own submissions{" "}
+                  </span>
+                  <button
+                    className="underline text-primary cursor-pointer"
+                    onClick={() => setSubmissionType("general_submissions")}
+                  >
+                    or go to general submissions
+                  </button>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <Button

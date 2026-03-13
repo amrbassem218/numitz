@@ -1,3 +1,4 @@
+"use client";
 import { useUser } from "@/app/hooks/useUser";
 import { useProblems, useProfile, useShownProblemId } from "@/app/store";
 import SubmissionsTable from "@/components/Contest/submissionRow";
@@ -15,13 +16,19 @@ interface ContestSubmissionsProps {}
 const ContestSubmissions: React.FunctionComponent<ContestSubmissionsProps> = (
   props,
 ) => {
+  const [submissionType, setSubmissionType] = useState("your_submissions");
   return (
     <TabsContent
       value="submissions"
       className="w-full h-full p-2 flex flex-col gap-4"
     >
       <ScrollArea className="h-full">
-        <Tabs className="h-full" defaultValue="your_submissions">
+        <Tabs
+          className="h-full"
+          defaultValue="your_submissions"
+          value={submissionType}
+          onValueChange={setSubmissionType}
+        >
           <TabsList>
             <TabsTrigger value="your_submissions">Your submissions</TabsTrigger>
             {/* TODO: Implement Friends submissions */}
@@ -35,11 +42,17 @@ const ContestSubmissions: React.FunctionComponent<ContestSubmissionsProps> = (
           </TabsList>
 
           <TabsContent value="your_submissions">
-            <SubmissionsTable type="your_submissions" />
+            <SubmissionsTable
+              type="your_submissions"
+              setSubmissionType={setSubmissionType}
+            />
           </TabsContent>
 
           <TabsContent value="general_submissions">
-            <SubmissionsTable type="general_submissions" />
+            <SubmissionsTable
+              type="general_submissions"
+              setSubmissionType={setSubmissionType}
+            />
           </TabsContent>
         </Tabs>
       </ScrollArea>
