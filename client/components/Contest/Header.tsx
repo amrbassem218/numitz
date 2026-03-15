@@ -81,7 +81,9 @@ const ContestHeader = ({ length_in_minutes }: Props) => {
           {/* TODO: Replace with actual streak */}
           {/* <RiFireFill className="text-muted-foreground h-full w-full" /> */}
         </div>
-        <UserIcon />
+        <div className="">
+          <UserIcon />
+        </div>
       </section>
     </nav>
   );

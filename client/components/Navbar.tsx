@@ -17,6 +17,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
+import UserIcon from "./header/userIcon";
 interface Props {
   type: HeaderType;
 }
@@ -24,10 +25,6 @@ const Navbar = ({ type }: Props) => {
   const pathName = usePathname();
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const userProfile = useProfile((state) => state.userProfile);
-  useEffect(() => {
-    console.log("userprofile: ", userProfile);
-  }, [userProfile]);
-  const signOut = useProfile((state) => state.signOut);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
   const handleSearch = () => {
@@ -85,50 +82,13 @@ const Navbar = ({ type }: Props) => {
             <IoSearch className="" />
           </button>
         </form>
+
         <button disabled>
           <Settings className="w-4 h-4" />
         </button>
 
-        {userProfile?.id ? (
-          // TODO: Replace with actual avatar
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <div className="w-10 h-10 rounded-full bg-primary flex justify-center items-center uppercase text-white text-sm font-bold cursor-pointer">
-                {userProfile.username
-                  ? userProfile.username.charAt(0).toUpperCase()
-                  : ""}
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Account</DropdownMenuLabel>
-                <DropdownMenuItem
-                  className="text-danger"
-                  onClick={() => signOut()}
-                >
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Button
-              variant={"primary"}
-              link="/sign_up"
-              className="text-xs py-0"
-            >
-              Sign Up
-            </Button>
-            <Button
-              variant={"outline"}
-              link="/sign_in"
-              className="text-xs py-2"
-            >
-              Sign in
-            </Button>
-          </div>
-        )}
+        <UserIcon />
+
         <Button
           variant={"outline"}
           onClick={() => setOpenMenu(!openMenu)}
