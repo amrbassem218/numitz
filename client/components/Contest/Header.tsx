@@ -1,20 +1,15 @@
 "use client";
-import { useMemo, useRef, useState } from "react";
-import Countdown, { CountdownApi } from "react-countdown";
-import { CiSettings } from "react-icons/ci";
 import { FaRegNoteSticky } from "react-icons/fa6";
 import { FiHelpCircle } from "react-icons/fi";
 import { RiLayout2Fill } from "react-icons/ri";
-import { RiFireFill } from "react-icons/ri";
 import { TfiMenu } from "react-icons/tfi";
 import UserIcon from "../header/userIcon";
-import { Mini_Logo } from "../ui/logo";
 import { Separator } from "../ui/separator";
 import ContestHeaderTimer from "./contestHeaderTimer";
 import { IoIosSettings } from "react-icons/io";
-import { TooltipTrigger, TooltipContent, Tooltip } from "../ui/tooltip";
-import { Button } from "../ui/button";
 import ComingSoon from "../comingSoon";
+import Image from "next/image";
+import Link from "next/link";
 interface Props {
   length_in_minutes: number;
 }
@@ -25,7 +20,16 @@ const ContestHeader = ({ length_in_minutes }: Props) => {
       <section className="">
         <div className="flex items-end gap-2 ">
           <div className="flex items-end gap-3">
-            <Mini_Logo />
+            {/* Logo */}
+            <Link href={"/"} className="flex items-center gap-2 ">
+              <Image
+                src="/logo_mini_light_transparent.svg"
+                alt="Logo"
+                width={100}
+                height={100}
+                className="w-6 h-6"
+              />
+            </Link>
             <Separator
               orientation="vertical"
               className="h-4! bg-foreground/20 "

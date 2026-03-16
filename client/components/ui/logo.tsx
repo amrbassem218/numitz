@@ -25,18 +25,5 @@ export default function Logo() {
 
 export function Mini_Logo() {
   return (
-    <Link href={"/"} className="flex items-center gap-2 ">
-      <Image
-        src="/logo_mini.svg"
-        alt="Logo"
-        width={100}
-        height={100}
-        className="w-6 h-6"
-      />
-      {/* <div className="flex flex-col justify-center items-center gap-0.5">
-        <Plus strokeWidth={6} size={10} className="text-primary" />
-        <div className="w-1 h-4 bg-foreground" />
-      </div> */}
-    </Link>
   );
 }
