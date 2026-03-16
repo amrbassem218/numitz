@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./client/public/github_mini_logo_light_with_bg.png" width="126" alt="HCB logo">
+  <img src="./client/public/github_mini_logo_light_with_bg.png" width="126" alt="Numitz logo">
   <h1>Numitz</h1>
   Starting with math, we'll make all STEM fun (ever heard of <a href="https://www.chess.com/">chess.com</a>) 
 </div>
@@ -16,12 +16,12 @@ Numitz (previously called Mathforces) is a competitive math platform with the pr
 
 ## Table of contents
 - [What is Numitz?](#what-is-numitz)
-- [Problem we're solving](#problem-we're-solving)
+- [Problem we're solving](#problem-we-are-solving)
 - [Solution](#solution)
 - [Key features](#key-features)
 - [How to use](#how-to-use)
 
-## Problem we're solving
+## Problem we are solving
 - No online library of problems raning in difficulty and topic ([previous attempts](#links))
 - Math sites look horrible (i.e. biggest math webiste: [Art of problem solving](https://artofproblemsolving.com/wiki/index.php/AMC_10_Problems_and_Solutions?srsltid=AfmBOopUgXQIHynLxR4x4Hq0_bZKL3TocC2v_IMquQTAqtY3rHXpDmeI))
 - Text books are currently the only viable way to get ready for math competitions or learn cool deep topics.
@@ -34,6 +34,10 @@ Numitz (previously called Mathforces) is a competitive math platform with the pr
 - Implement [Elo-based](https://en.wikipedia.org/wiki/Elo_rating_system) rating with naming conventions like (Newbie, pupil, specialist, expert...etc like in [codeforces](codeforces.com)) 
 
 ## Key features 
+
+>[!NOTE]
+> Those are not all the features but rather the features that are unique to Numitz. Also a lot of parts of features mentioned are yet to be implemented and will probably be altered later on.
+
 ### Social media like community 
   * Add your friends & dual them in a 1v1
   * Add your school group and all enter a timed ranked contest 
