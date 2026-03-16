@@ -23,7 +23,7 @@ Numitz (previously called Mathforces) is a competitive math platform with the pr
 
 ## Problem we are solving
 - No online library of problems raning in difficulty and topic ([previous attempts](#links))
-- Math sites look horrible (i.e. biggest math webiste: [Art of problem solving](https://artofproblemsolving.com/wiki/index.php/AMC_10_Problems_and_Solutions?srsltid=AfmBOopUgXQIHynLxR4x4Hq0_bZKL3TocC2v_IMquQTAqtY3rHXpDmeI))
+- Math sites look horrible (again look at [previous attempts](#links))
 - Text books are currently the only viable way to get ready for math competitions or learn cool deep topics.
 - There is no fun. chess.com gamified chess (when it did it blew up in popularity). [codeforces](codeforces.com) and [leetcode](leetcode.com) gamified coding. It's time STEM subjects to do so too and we're starting with Maths.
 
@@ -68,4 +68,12 @@ For Simplicity all correct answers are set to 1
 
 - Here you can find the problems that were in past contests neatly arranged
 - You can currently sort by difficulty and the percentage of people that correctly solved a problem
+
+## Links
+- New website (under development): https://numitz.vercel.app/
+- Old website (Mathforces): https://mathforces-pi.vercel.app/
+- Previous attempts from others
+  - [Art of problemsolving](https://artofproblemsolving.com/)
+  - [Mathdash](https://mathdash.com/)
+  - [Project Euler](https://projecteuler.net/)
 
