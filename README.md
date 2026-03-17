@@ -35,11 +35,15 @@ Numitz (previously called Mathforces) is a competitive math platform with the pr
 - Implement [Elo-based](https://en.wikipedia.org/wiki/Elo_rating_system) rating with naming conventions like (Newbie, pupil, specialist, expert...etc like in [codeforces](codeforces.com)) 
 
 ## Implemented-Features
+
 ### Contest system 
 You can now register to a contest, solve problems, look at your submissions and others, and use builtin desmos graphing calculator
 
+Want to create your own contest. Try that on the old website [Mathforces](https://mathforces-pi.vercel.app/). Will roll out on Numitz soon isa. 
+
 ## Problem set page 
 Although incomplete, you can view hundreds of mock problems from past contests (Primarly from [putnam archive](https://kskedlaya.org/putnam-archive/)), and try to answer them in their parent contest page.
+
 
 ## Key features 
 
