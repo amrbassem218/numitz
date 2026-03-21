@@ -23,7 +23,7 @@ export default function Logo() {
   );
 }
 
-export function Mini_Logo() {
-  return (
-  );
-}
+// export function Mini_Logo() {
+//   return (
+//   );
+// }
