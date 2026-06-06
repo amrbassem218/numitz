@@ -59,6 +59,46 @@ export interface UserProfile {
   bio?: string;
 }
 
+export interface ProfileData {
+  id: string;
+  username: string;
+  image_url: string | null;
+  bio: string | null;
+  elo_rating: number;
+  contribution_rating: number;
+  ranking: string | null;
+  country: string | null;
+  math_club: string | null;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  followers_count: number;
+  following_count: number;
+  created_at: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  likes_count: number;
+  comments_count: number;
+}
+
+export interface RatingPoint {
+  rating: number;
+  contest_id: string | null;
+  contest_name?: string;
+  created_at: string;
+  rank_in_contest: number | null;
+}
+
+export interface ActivityDay {
+  date: string;
+  count: number;
+}
+
 export interface FormattedDate {
   time: string;
   timeFull: string;

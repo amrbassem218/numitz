@@ -249,35 +249,181 @@ export type Database = {
           },
         ]
       }
-      profiles: {
+      blogs: {
+        Row: {
+          comments_count: number | null
+          content: string
+          created_at: string
+          id: string
+          likes_count: number | null
+          published: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comments_count?: number | null
+          content: string
+          created_at?: string
+          id?: string
+          likes_count?: number | null
+          published?: boolean
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comments_count?: number | null
+          content?: string
+          created_at?: string
+          id?: string
+          likes_count?: number | null
+          published?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      followers: {
         Row: {
           created_at: string
-          email: string | null
-          first_name: string | null
+          follower_id: string
           id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "followers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "followers_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          bio: string | null
+          contribution_rating: number | null
+          country: string | null
+          created_at: string
+          email: string | null
+          elo_rating: number | null
+          first_name: string | null
+          followers_count: number | null
+          following_count: number | null
+          id: string
+          image_url: string | null
           last_name: string | null
+          math_club: string | null
           ranking: string | null
           username: string | null
         }
         Insert: {
+          bio?: string | null
+          contribution_rating?: number | null
+          country?: string | null
           created_at?: string
           email?: string | null
+          elo_rating?: number | null
           first_name?: string | null
+          followers_count?: number | null
+          following_count?: number | null
           id?: string
+          image_url?: string | null
           last_name?: string | null
+          math_club?: string | null
           ranking?: string | null
           username?: string | null
         }
         Update: {
+          bio?: string | null
+          contribution_rating?: number | null
+          country?: string | null
           created_at?: string
           email?: string | null
+          elo_rating?: number | null
           first_name?: string | null
+          followers_count?: number | null
+          following_count?: number | null
           id?: string
+          image_url?: string | null
           last_name?: string | null
+          math_club?: string | null
           ranking?: string | null
           username?: string | null
         }
         Relationships: []
+      }
+      rating_history: {
+        Row: {
+          contest_id: string | null
+          created_at: string
+          id: string
+          rank_in_contest: number | null
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          contest_id?: string | null
+          created_at?: string
+          id?: string
+          rank_in_contest?: number | null
+          rating: number
+          user_id: string
+        }
+        Update: {
+          contest_id?: string | null
+          created_at?: string
+          id?: string
+          rank_in_contest?: number | null
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rating_history_contest_id_fkey"
+            columns: ["contest_id"]
+            isOneToOne: false
+            referencedRelation: "contests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rating_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       registered_in_contest: {
         Row: {
