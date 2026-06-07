@@ -101,7 +101,7 @@ export function useMediaPermissions(): MediaPermissionsResult {
           }
 
           const settings = videoTrack.getSettings();
-          if (settings.displaySurface && settings.displaySurface !== "monitor") {
+          if (settings.displaySurface !== undefined && settings.displaySurface !== "monitor") {
             screenStream.getTracks().forEach((t) => t.stop());
             setError(
               "Please share your entire screen, not just a window or browser tab.",

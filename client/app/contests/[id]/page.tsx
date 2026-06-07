@@ -75,6 +75,13 @@ export default function Page() {
 
   const [hasAttemptedPermissions, setHasAttemptedPermissions] = useState(false);
 
+  const [now, setNow] = useState(() => new Date());
+  const contestPhase = contest
+    ? getContestPhase(contest, now)
+    : "practice";
+  const contestMode = getContestMode(contest);
+  const needsAuth = contestMode === "live" && contestPhase === "live";
+
   const handleRequestMedia = useCallback(async () => {
     const success = await requestAllMedia();
     setHasAttemptedPermissions(true);
@@ -82,10 +89,10 @@ export default function Page() {
   }, [requestAllMedia]);
 
   useEffect(() => {
-    if (requiresMediaPermissions && !hasAttemptedPermissions) {
-      handleRequestMedia();
-    }
-  }, [requiresMediaPermissions, hasAttemptedPermissions, handleRequestMedia]);
+    if (!requiresMediaPermissions || hasAttemptedPermissions) return;
+    if (needsAuth && !user) return;
+    handleRequestMedia();
+  }, [requiresMediaPermissions, hasAttemptedPermissions, handleRequestMedia, needsAuth, user]);
 
   // No additional re-prompt logic needed — when allGranted flips to false
   // while requiresMediaPermissions is true, the overlay shows automatically
@@ -103,7 +110,6 @@ export default function Page() {
     useState("problemStatement");
   const [mobileActiveTab, setMobileActiveTab] = useState("problemStatement");
   const [expressions, setExpressions] = useState<unknown>(null);
-  const [now, setNow] = useState(() => new Date());
   const activeTabParam = contestParams.get("tab");
   const leftBarTabValues = useMemo(
     () =>
@@ -133,11 +139,6 @@ export default function Page() {
     [bottomBarTabValues, leftBarTabValues, rightBarTabValues],
   );
   const prevLocalStorage = useRef<Record<string, string> | null>(null);
-  const contestPhase = contest
-    ? getContestPhase(contest, now)
-    : "practice";
-  const contestMode = getContestMode(contest);
-  const needsAuth = contestMode === "live" && contestPhase === "live";
   const canLoadContestProblems =
     contestMode === "practice" || (contestPhase === "live" && !!user) || contestPhase === "ended";
 
@@ -329,7 +330,8 @@ export default function Page() {
   if (loading) return <Loading title="Contest Problem" />;
 
   // In live mode, show permissions overlay when any permission is not granted
-  if (requiresMediaPermissions && !mediaAllGranted) {
+  // (but only after auth state is resolved — auth handlers redirect to /sign_in)
+  if (requiresMediaPermissions && !mediaAllGranted && (!needsAuth || user)) {
     return (
       <>
         <MediaPermissionsOverlay
