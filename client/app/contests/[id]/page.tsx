@@ -53,6 +53,10 @@ export default function Page() {
 
   const [error, setError] = useState<string | null>(null);
 
+  const recordingConfig = user?.id
+    ? { contestId: contest_id as string, userId: user.id }
+    : null;
+
   const {
     permissions: mediaPermissions,
     allGranted: mediaAllGranted,
@@ -61,7 +65,7 @@ export default function Page() {
     requestAll: requestAllMedia,
     stopAll: stopAllMedia,
     dismissError: dismissMediaError,
-  } = useMediaPermissions();
+  } = useMediaPermissions(recordingConfig);
 
   const isLive = useMemo(() => {
     if (!contest) return false;

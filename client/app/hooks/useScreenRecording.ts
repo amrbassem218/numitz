@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
 export type MediaPermissionType = "screen" | "camera" | "microphone";
+type RecordingType = MediaPermissionType;
 
 export type MediaPermissionStatus = "pending" | "granted" | "denied";
 
@@ -29,6 +30,11 @@ export interface MediaPermissionsResult {
   dismissError: () => void;
 }
 
+interface RecordingConfig {
+  contestId: string;
+  userId: string;
+}
+
 function mapDOMException(err: unknown, label: string): string {
   if (err instanceof DOMException) {
     if (
@@ -51,7 +57,93 @@ function mapDOMException(err: unknown, label: string): string {
   return `An unexpected error occurred while accessing ${label.toLowerCase()}. Please try again.`;
 }
 
-export function useMediaPermissions(): MediaPermissionsResult {
+const MAX_RETRIES = 3;
+const RETRY_BASE_MS = 1_000;
+
+async function uploadChunk(
+  blob: Blob,
+  config: RecordingConfig,
+  type: RecordingType,
+  chunkIndex: number,
+): Promise<void> {
+  const timestamp = Date.now();
+
+  const file = new File([blob], `chunk_${chunkIndex}.webm`, { type: blob.type });
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append(
+    "meta",
+    JSON.stringify({
+      contestId: config.contestId,
+      fileType: type,
+      timestamp,
+    }),
+  );
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetch("/api/recordings/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) return;
+
+      const text = await res.text();
+      console.error(
+        `Failed to upload ${type} chunk ${chunkIndex} (attempt ${attempt}/${MAX_RETRIES}): ${res.status} ${text}`,
+      );
+    } catch (err) {
+      console.error(
+        `Error uploading ${type} chunk ${chunkIndex} (attempt ${attempt}/${MAX_RETRIES}):`,
+        err,
+      );
+    }
+
+    if (attempt < MAX_RETRIES) {
+      const delay = RETRY_BASE_MS * 2 ** (attempt - 1);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+}
+
+const CHUNK_INTERVAL_MS = 30_000;
+
+const MIME_TYPES: Record<string, string> = {
+  screen: "video/webm;codecs=vp9,opus",
+  camera: "video/webm;codecs=vp9,opus",
+  microphone: "audio/webm;codecs=opus",
+};
+
+function startRecorder(
+  stream: MediaStream,
+  config: RecordingConfig,
+  type: RecordingType,
+): MediaRecorder {
+  const mimeType = MIME_TYPES[type];
+  let recorder: MediaRecorder;
+
+  if (MediaRecorder.isTypeSupported(mimeType)) {
+    recorder = new MediaRecorder(stream, { mimeType });
+  } else {
+    const fallback = type === "microphone" ? "audio/webm" : "video/webm";
+    recorder = new MediaRecorder(stream, { mimeType: fallback });
+  }
+
+  let chunkIndex = 0;
+
+  recorder.ondataavailable = (event) => {
+    if (event.data.size > 0) {
+      const idx = chunkIndex++;
+      uploadChunk(event.data, config, type, idx);
+    }
+  };
+
+  recorder.start(CHUNK_INTERVAL_MS);
+  return recorder;
+}
+
+export function useMediaPermissions(recordingConfig?: RecordingConfig | null): MediaPermissionsResult {
   const [permissions, setPermissions] = useState<MediaPermissionState>({
     screen: "pending",
     camera: "pending",
@@ -64,7 +156,18 @@ export function useMediaPermissions(): MediaPermissionsResult {
   const cameraStreamRef = useRef<MediaStream | null>(null);
   const micStreamRef = useRef<MediaStream | null>(null);
 
+  const screenRecorderRef = useRef<MediaRecorder | null>(null);
+  const cameraRecorderRef = useRef<MediaRecorder | null>(null);
+  const micRecorderRef = useRef<MediaRecorder | null>(null);
+
   const stopAll = useCallback(() => {
+    [screenRecorderRef, cameraRecorderRef, micRecorderRef].forEach((ref) => {
+      if (ref.current && ref.current.state !== "inactive") {
+        ref.current.stop();
+        ref.current = null;
+      }
+    });
+
     [screenStreamRef, cameraStreamRef, micStreamRef].forEach((ref) => {
       if (ref.current) {
         ref.current.getTracks().forEach((t) => t.stop());
@@ -117,6 +220,9 @@ export function useMediaPermissions(): MediaPermissionsResult {
           };
 
           screenStreamRef.current = screenStream;
+          if (recordingConfig) {
+            screenRecorderRef.current = startRecorder(screenStream, recordingConfig, "screen");
+          }
           setPermissions((prev) => ({ ...prev, screen: "granted" }));
           return true;
         }
@@ -136,6 +242,9 @@ export function useMediaPermissions(): MediaPermissionsResult {
           };
 
           cameraStreamRef.current = cameraStream;
+          if (recordingConfig) {
+            cameraRecorderRef.current = startRecorder(cameraStream, recordingConfig, "camera");
+          }
           setPermissions((prev) => ({ ...prev, camera: "granted" }));
           return true;
         }
@@ -152,6 +261,9 @@ export function useMediaPermissions(): MediaPermissionsResult {
           };
 
           micStreamRef.current = micStream;
+          if (recordingConfig) {
+            micRecorderRef.current = startRecorder(micStream, recordingConfig, "microphone");
+          }
           setPermissions((prev) => ({ ...prev, microphone: "granted" }));
           return true;
         }
@@ -171,7 +283,7 @@ export function useMediaPermissions(): MediaPermissionsResult {
         return false;
       }
     },
-    [stopAll],
+    [stopAll, recordingConfig],
   );
 
   const requestAll = useCallback(async (): Promise<boolean> => {

@@ -26,6 +26,7 @@
     "@supabase/supabase-js": "^2.87.2",
     "@tanstack/react-table": "^8.21.3",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/blob": "^2.4.0",
     "@vercel/speed-insights": "^2.0.0",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
