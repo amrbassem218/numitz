@@ -57,6 +57,7 @@ export interface UserProfile {
   last_name?: string;
   username?: string;
   image?: string;
+  image_url?: string | null;
   bio?: string;
   type?: string;
 }
@@ -169,6 +170,49 @@ export interface Ranking {
   title_short?: Ranking_title_short;
   rating?: number;
   color: string;
+}
+
+export interface ProfileData {
+  id: string;
+  username: string;
+  bio: string | null;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  image_url: string | null;
+  elo_rating: number;
+  contribution_rating: number;
+  country: string | null;
+  math_club: string | null;
+  followers_count: number;
+  following_count: number;
+  created_at: string;
+}
+
+export interface BlogPost {
+  id: string;
+  user_id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  likes_count: number;
+  comments_count: number;
+  published: boolean;
+}
+
+export interface RatingPoint {
+  id: string;
+  user_id: string;
+  contest_id: string | null;
+  rating: number;
+  rank_in_contest: number | null;
+  created_at: string;
+}
+
+export interface ActivityDay {
+  date: string;
+  count: number;
 }
 
 export type UserRanking = {
