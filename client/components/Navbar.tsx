@@ -1,45 +1,17 @@
 "use client";
 import { MainLinks } from "@/data/Links";
 import Link from "next/link";
-import { Button } from "./ui/button";
-import { usePathname, useRouter } from "next/navigation";
-import { Logs, Plus, Send, Settings } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useProfile } from "@/app/store";
-import { Input } from "./ui/input";
-import { HeaderType } from "@/types/types";
-import { IoSearch } from "react-icons/io5";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuItem,
-} from "./ui/dropdown-menu";
+import { Plus, Settings } from "lucide-react";
+import { usePathname } from "next/navigation";
 import UserIcon from "./header/userIcon";
-import { useIsMobile } from "@/hook/useIsMobile";
 import ComingSoon from "./comingSoon";
-interface Props {
-  type: HeaderType;
-}
-const Navbar = ({ type }: Props) => {
+const Navbar = () => {
   const pathName = usePathname();
-  const [openMenu, setOpenMenu] = useState<boolean>(false);
-  const userProfile = useProfile((state) => state.userProfile);
-  const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
-  const isMobile = useIsMobile();
-  const handleSearch = () => {
-    router.push(`/problemset?query=${searchQuery}`);
-  };
   return (
     <nav
-      className={`fixed top-0 left-0 w-full px-4 py-4 flex  ${type === "short" || isMobile ? "justify-around" : type === "long" ? "justify-between" : ""} items-center gap-5 z-50 bg-bg-dark`}
+      className={`fixed top-0 left-0 w-full px-4 py-4 flex justify-between items-center gap-5 z-50 bg-bg-dark`}
     >
-      {/* Right Side */}
       <div className="flex items-center gap-3">
-        {/* Logo */}
         <Link href="/">
           <h5 className="font-bold! flex items-end justify-end z-50">
             <div className="flex justify-end items-end">
@@ -56,7 +28,6 @@ const Navbar = ({ type }: Props) => {
           </h5>
         </Link>
 
-        {/* Nav links */}
         <div className="hidden md:flex">
           {MainLinks.map((link) => (
             <Link
@@ -74,68 +45,14 @@ const Navbar = ({ type }: Props) => {
         </div>
       </div>
 
-      {/* Left side */}
       <div className="hidden lg:flex items-center gap-4">
-        {/* Search bar */}
-        {/* <form className="relative" onSubmit={() => handleSearch()}> */}
-        {/*   <Input */}
-        {/*     placeholder="Search for something..." */}
-        {/*     value={searchQuery} */}
-        {/*     onChange={(e) => setSearchQuery(e.target.value)} */}
-        {/*   /> */}
-        {/*   <button */}
-        {/*     type="submit" */}
-        {/*     className="bg-primary flex items-center justify-center rounded-md absolute right-0 top-0 p-2  h-full" */}
-        {/*   > */}
-        {/*     <IoSearch className="" /> */}
-        {/*   </button> */}
-        {/* </form> */}
-
-        {/* Settings */}
         <ComingSoon>
           <button disabled>
             <Settings className="w-4 h-4" />
           </button>
         </ComingSoon>
 
-        {/* Icon && Logins */}
         <UserIcon />
-      </div>
-
-      {/* Mobile Menu button  */}
-      <Button
-        variant={"outline"}
-        onClick={() => setOpenMenu(!openMenu)}
-        className="text-primary absolute top-1/2 -translate-y-1/2 right-5 focus:text-primary/80 md:hidden !px-2 py-1 "
-      >
-        <Logs size={10} strokeWidth={3} />
-      </Button>
-
-      {/* for mobile */}
-      <div
-        className={`absolute top-20 left-0 w-full bg-white/10 backdrop-blur-xs flex flex-col items-center md:hidden py-5
-    transition-all duration-300 ease-out
-    ${
-      openMenu
-        ? "opacity-100 translate-y-0"
-        : "opacity-0 -translate-y-5 pointer-events-none"
-    }
-  `}
-      >
-        {MainLinks.map((link) => (
-          <Link
-            key={link.name}
-            href={link.href}
-            onClick={() => setOpenMenu(false)}
-            className={`my-2 w-full text-center text-lg hover:text-primary duration-100 ${
-              pathName === link.href
-                ? "text-primary"
-                : "text-gray-700 dark:text-neutral-300"
-            }`}
-          >
-            {link.name}
-          </Link>
-        ))}
       </div>
     </nav>
   );
