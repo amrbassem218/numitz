@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hook/useIsMobile";
@@ -27,6 +27,8 @@ import ContestStandings from "./standings";
 import ScientificCalc from "@/components/Contest/scientificCalc";
 import ComingSoon from "@/components/comingSoon";
 import { getContestMode, getContestPhase } from "@/lib/contest";
+import MediaPermissionsOverlay from "@/components/Contest/ScreenRecordingOverlay";
+import { useMediaPermissions, type MediaPermissionType } from "@/app/hooks/useScreenRecording";
 
 const bottomBarTabs = [
   {
@@ -51,6 +53,61 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
 
   const [error, setError] = useState<string | null>(null);
+
+  const recordingConfig = user?.id
+    ? { contestId: contest_id as string, userId: user.id }
+    : null;
+
+  const {
+    permissions: mediaPermissions,
+    allGranted: mediaAllGranted,
+    error: mediaError,
+    errorPermission: mediaErrorPermission,
+    requestAll: requestAllMedia,
+    stopAll: stopAllMedia,
+    dismissError: dismissMediaError,
+    screenSharingSupported,
+  } = useMediaPermissions(recordingConfig);
+
+  const requiredPermissions: MediaPermissionType[] = useMemo(() => {
+    return screenSharingSupported
+      ? ["screen", "camera", "microphone"]
+      : ["camera", "microphone"];
+  }, [screenSharingSupported]);
+
+  const isLive = useMemo(() => {
+    if (!contest) return false;
+    const now = new Date();
+    const start = new Date(contest.start_date);
+    const end = new Date(contest.end_date);
+    return start <= now && now < end;
+  }, [contest]);
+
+  const requiresMediaPermissions = isLive;
+
+  const [hasAttemptedPermissions, setHasAttemptedPermissions] = useState(false);
+
+  const [now, setNow] = useState(() => new Date());
+  const contestPhase = contest
+    ? getContestPhase(contest, now)
+    : "practice";
+  const contestMode = getContestMode(contest);
+  const needsAuth = contestMode === "live" && contestPhase === "live";
+
+  const handleRequestMedia = useCallback(async () => {
+    const success = await requestAllMedia();
+    setHasAttemptedPermissions(true);
+    return success;
+  }, [requestAllMedia]);
+
+  useEffect(() => {
+    if (!requiresMediaPermissions || hasAttemptedPermissions) return;
+    if (needsAuth && !user) return;
+    handleRequestMedia();
+  }, [requiresMediaPermissions, hasAttemptedPermissions, handleRequestMedia, needsAuth, user]);
+
+  // No additional re-prompt logic needed — when allGranted flips to false
+  // while requiresMediaPermissions is true, the overlay shows automatically
   const [problems, setProblems] = useState<ContestProblem[]>([]);
   const { shownProblemId, setShownProblemId } = useShownProblemId();
   const problemId = contestParams.get("problemId") ?? null;
@@ -65,7 +122,6 @@ export default function Page() {
     useState("problemStatement");
   const [mobileActiveTab, setMobileActiveTab] = useState("problemStatement");
   const [expressions, setExpressions] = useState<unknown>(null);
-  const [now, setNow] = useState(() => new Date());
   const activeTabParam = contestParams.get("tab");
   const leftBarTabValues = useMemo(
     () =>
@@ -95,11 +151,6 @@ export default function Page() {
     [bottomBarTabValues, leftBarTabValues, rightBarTabValues],
   );
   const prevLocalStorage = useRef<Record<string, string> | null>(null);
-  const contestPhase = contest
-    ? getContestPhase(contest, now)
-    : "practice";
-  const contestMode = getContestMode(contest);
-  const needsAuth = contestMode === "live" && contestPhase === "live";
   const canLoadContestProblems =
     contestMode === "practice" || (contestPhase === "live" && !!user) || contestPhase === "ended";
 
@@ -299,6 +350,27 @@ export default function Page() {
 
   if (loading) return <Loading title="Contest Problem" />;
 
+  // In live mode, show permissions overlay when any permission is not granted
+  // (but only after auth state is resolved — auth handlers redirect to /sign_in)
+  if (requiresMediaPermissions && !mediaAllGranted && (!needsAuth || user)) {
+    return (
+      <>
+        <MediaPermissionsOverlay
+          permissions={mediaPermissions}
+          error={mediaError}
+          errorPermission={mediaErrorPermission}
+          onRequestAll={handleRequestMedia}
+          onDismissError={dismissMediaError}
+          requiredPermissions={requiredPermissions}
+        />
+        {/* Show a minimal background while waiting */}
+        <main className="h-screen! max-h-screen! max-w-full! px-1 flex flex-col py-1">
+          <ContestHeader contest={contest!} />
+        </main>
+      </>
+    );
+  }
+
   if (error) {
     return <ContestError error={error} />;
   }
@@ -374,13 +446,13 @@ export default function Page() {
           </ScrollArea>
 
           <div className="min-h-0 flex-1 overflow-hidden">
-            {mobileActiveTab == "problemStatement" && (
-              <Problem_Statement_card
-                setProblemsStatus={setProblemsStatus}
-                problemsStatus={problemsStatus}
-                contestPhase={contestPhase}
-              />
-            )}
+            <Problem_Statement_card
+              setProblemsStatus={setProblemsStatus}
+              problemsStatus={problemsStatus}
+              contestPhase={contestPhase}
+              mediaPermissionsGranted={mediaAllGranted}
+              requiresMediaPermissions={requiresMediaPermissions}
+            />
 
             {mobileActiveTab == "problems" && (
               <ScrollArea className="h-full">
@@ -389,6 +461,8 @@ export default function Page() {
                   problems={problems}
                   problemsStatus={problemsStatus}
                   onProblemSelect={() => changeMobileTab("problemStatement")}
+                  mediaPermissionsGranted={mediaAllGranted}
+                  requiresMediaPermissions={requiresMediaPermissions}
                 />
               </ScrollArea>
             )}
@@ -464,6 +538,8 @@ export default function Page() {
                         contest={contest}
                         problems={problems}
                         problemsStatus={problemsStatus}
+                        mediaPermissionsGranted={mediaAllGranted}
+                        requiresMediaPermissions={requiresMediaPermissions}
                       />
                     </div>
                   )}
@@ -519,6 +595,8 @@ export default function Page() {
                     setProblemsStatus={setProblemsStatus}
                     problemsStatus={problemsStatus}
                     contestPhase={contestPhase}
+                    mediaPermissionsGranted={mediaAllGranted}
+                    requiresMediaPermissions={requiresMediaPermissions}
                   />
 
                   <TabsContent value="graphingCalculator">

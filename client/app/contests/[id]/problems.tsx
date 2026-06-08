@@ -11,6 +11,8 @@ interface ContestProblemsProps {
   problems: ContestProblem[];
   problemsStatus: Record<string, string>;
   onProblemSelect?: () => void;
+  mediaPermissionsGranted?: boolean;
+  requiresMediaPermissions?: boolean;
 }
 
 const ContestProblems: React.FunctionComponent<ContestProblemsProps> = ({
@@ -18,7 +20,11 @@ const ContestProblems: React.FunctionComponent<ContestProblemsProps> = ({
   problems,
   problemsStatus,
   onProblemSelect,
+  mediaPermissionsGranted = true,
+  requiresMediaPermissions = false,
 }) => {
+  const isBlocked = requiresMediaPermissions && !mediaPermissionsGranted;
+
   return (
     <div>
       <TabsContent value="problems" className="p-4 flex flex-col gap-3 w-full">
@@ -38,17 +44,27 @@ const ContestProblems: React.FunctionComponent<ContestProblemsProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-3 w-full py-2 pr-2">
-          {problems.map((problem) => (
-            <div key={problem.id} className="w-full">
-              <Problem_Card
-                problem={problem}
-                problemsStatus={problemsStatus}
-                onProblemSelect={onProblemSelect}
-              />
-            </div>
-          ))}
-        </div>
+        {isBlocked ? (
+          <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+            <div className="text-4xl">📺</div>
+            <p className="text-sm text-muted-foreground max-w-xs">
+              Screen sharing, camera, and microphone access are required to view
+              problems during this live contest.
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-3 w-full py-2 pr-2">
+            {problems.map((problem) => (
+              <div key={problem.id} className="w-full">
+                <Problem_Card
+                  problem={problem}
+                  problemsStatus={problemsStatus}
+                  onProblemSelect={onProblemSelect}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Copyrights */}
         <section className="flex flex-col justify-center items-center gap-2">
