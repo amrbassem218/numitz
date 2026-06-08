@@ -469,7 +469,9 @@ export default function Page() {
             )}
 
             {mobileActiveTab == "standings" && (
-                    <ContestStandings contestId={contest.id} problems={problems} contestStartDate={contest.start_date as unknown as string} />
+              <div className="flex-1 min-h-0">
+                <ContestStandings contestId={contest.id} problems={problems} contestStartDate={contest.start_date as unknown as string} />
+              </div>
             )}
 
             <ContestSubmissions contestPhase={contestPhase} />
@@ -546,7 +548,9 @@ export default function Page() {
                   )}
 
                   {leftBarActiveTab == "standings" && (
-              <ContestStandings contestId={contest.id} problems={problems} contestStartDate={contest.start_date as unknown as string} />
+                    <div className="flex-1 min-h-0">
+                      <ContestStandings contestId={contest.id} problems={problems} contestStartDate={contest.start_date as unknown as string} />
+                    </div>
                   )}
                 </Tabs>
               </section>

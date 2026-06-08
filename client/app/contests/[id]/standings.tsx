@@ -1,7 +1,6 @@
 "use client";
 import { safeNumber } from "@/lib/utils";
 import { getRankingColor } from "@/lib/ranking";
-import { useVirtualList } from "@/hook/useVirtualList";
 import { ContestProblem, Standing } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
@@ -22,6 +21,7 @@ const ContestStandings = ({ contestId, problems, contestStartDate }: Props) => {
   const [standingsLoading, setStandingsLoading] = useState(true);
   const [isNarrow, setIsNarrow] = useState(false);
   const outerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const scoresScrollRef = useRef<HTMLDivElement>(null);
   const rowScrollRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scrollLeftRef = useRef(0);
@@ -65,14 +65,6 @@ const ContestStandings = ({ contestId, problems, contestStartDate }: Props) => {
   useEffect(() => {
     getStandings();
   }, []);
-
-  const {
-    containerRef,
-    totalHeight,
-    startIndex,
-    visibleItems,
-    offsetY,
-  } = useVirtualList(standings, { itemHeight: ROW_HEIGHT });
 
   if (standingsLoading) {
     return (
@@ -138,90 +130,77 @@ const ContestStandings = ({ contestId, problems, contestStartDate }: Props) => {
         ref={containerRef}
         className="overflow-auto flex-1 min-h-0"
       >
-        <div style={{ height: totalHeight, position: "relative" }}>
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              transform: `translateY(${offsetY}px)`,
-            }}
-          >
-            {visibleItems.map((standing, i) => {
-              const globalIndex = startIndex + i;
-              const rank = globalIndex + 1;
-              const username = standing?.profiles?.username ?? "UNKNOWN";
-              const elo = standing.elo_rating ?? 0;
-              const color = getRankingColor(elo);
+        {standings.map((standing, i) => {
+          const rank = i + 1;
+          const username = standing?.profiles?.username ?? "UNKNOWN";
+          const elo = standing.elo_rating ?? 0;
+          const color = getRankingColor(elo);
 
-              return (
+          return (
+            <div
+              key={standing.id ?? i}
+              className="flex items-center gap-2 px-2 hover:bg-muted/40 transition-colors"
+              style={{ height: ROW_HEIGHT }}
+            >
+              <span className="w-5 shrink-0 text-xs text-muted-foreground text-center">
+                {rank}
+              </span>
+
+              <Link
+                href={`/profile/${username}`}
+                className={`w-28 shrink-0 text-sm font-bold truncate ${color} hover:underline`}
+              >
+                {username}
+              </Link>
+
+              {!isNarrow && (
                 <div
-                  key={standing.id ?? globalIndex}
-                  className="flex items-center gap-2 px-2 hover:bg-muted/40 transition-colors"
-                  style={{ height: ROW_HEIGHT }}
+                  ref={(el) => { rowScrollRefs.current[i] = el; }}
+                  onScroll={(e) => syncScroll(e.currentTarget)}
+                  className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden shrink min-w-0"
                 >
-                  <span className="w-5 shrink-0 text-xs text-muted-foreground text-center">
-                    {rank}
-                  </span>
-
-                  <Link
-                    href={`/profile/${username}`}
-                    className={`w-28 shrink-0 text-sm font-bold truncate ${color} hover:underline`}
-                  >
-                    {username}
-                  </Link>
-
-                  {!isNarrow && (
-                    <div
-                      ref={(el) => { rowScrollRefs.current[i] = el; }}
-                      onScroll={(e) => syncScroll(e.currentTarget)}
-                      className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden shrink min-w-0"
-                    >
-                      <div className="flex gap-2">
-                        {problems.map((problem) => {
-                          const info = standing.problem_scores?.[problem.id];
-                          const myScore = info?.score ?? 0;
-                          let timeStr = "";
-                          if (info?.created_at && myScore > 0) {
-                            const elapsed =
-                              new Date(info.created_at).getTime() -
-                              new Date(contestStartDate).getTime();
-                            const totalMinutes = Math.floor(
-                              elapsed / 60000
-                            );
-                            const h = Math.floor(totalMinutes / 60);
-                            const m = totalMinutes % 60;
-                            timeStr = `(${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")})`;
-                          }
-                          return (
-                            <div
-                              key={problem.id}
-                              className="w-8 shrink-0 flex flex-col items-center leading-tight"
-                            >
-                              <span className="text-xs font-semibold tabular-nums leading-tight data-[solved=true]:text-green-600 data-[solved=false]:text-muted-foreground/40" data-solved={myScore > 0}>
-                                {myScore > 0 ? myScore : "–"}
-                              </span>
-                              {timeStr && (
-                                <span className="text-[9px] text-muted-foreground/60 tabular-nums leading-none">
-                                  {timeStr}
-                                </span>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  <span className="w-12 shrink-0 text-sm font-semibold text-right tabular-nums">
-                    {safeNumber(standing.score)}
-                  </span>
+                  <div className="flex gap-2">
+                    {problems.map((problem) => {
+                      const info = standing.problem_scores?.[problem.id];
+                      const myScore = info?.score ?? 0;
+                      let timeStr = "";
+                      if (info?.created_at && myScore > 0) {
+                        const elapsed =
+                          new Date(info.created_at).getTime() -
+                          new Date(contestStartDate).getTime();
+                        const totalMinutes = Math.floor(
+                          elapsed / 60000
+                        );
+                        const h = Math.floor(totalMinutes / 60);
+                        const m = totalMinutes % 60;
+                        timeStr = `(${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")})`;
+                      }
+                      return (
+                        <div
+                          key={problem.id}
+                          className="w-8 shrink-0 flex flex-col items-center leading-tight"
+                        >
+                          <span className="text-xs font-semibold tabular-nums leading-tight data-[solved=true]:text-green-600 data-[solved=false]:text-muted-foreground/40" data-solved={myScore > 0}>
+                            {myScore > 0 ? myScore : "–"}
+                          </span>
+                          {timeStr && (
+                            <span className="text-[9px] text-muted-foreground/60 tabular-nums leading-none">
+                              {timeStr}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              )}
+
+              <span className="w-12 shrink-0 text-sm font-semibold text-right tabular-nums">
+                {safeNumber(standing.score)}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
