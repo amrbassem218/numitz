@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface Props {
   size?: "sm" | "md" | "lg";
@@ -17,6 +18,7 @@ interface Props {
 const UserIcon = ({ size = "md" }: Props) => {
   const signOut = useProfile((state) => state.signOut);
   const userProfile = useProfile((state) => state.userProfile);
+  const router = useRouter();
 
   const sizeClasses = {
     sm: "w-6 h-6 text-xs",
@@ -39,7 +41,10 @@ const UserIcon = ({ size = "md" }: Props) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuGroup>
-              <DropdownMenuLabel>Account</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">Account</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => router.push(`/profile/${userProfile.username}`)}>
+                Profile
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-danger"
                 onClick={() => signOut()}
