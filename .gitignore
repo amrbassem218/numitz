@@ -1,0 +1,24 @@
+# dependencies
+node_modules/
+
+# database dumps
+*.backup
+
+# Python
+__pycache__/
+*.pyc
+
+# env files
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+
+# data (CSV files with user data)
+data/

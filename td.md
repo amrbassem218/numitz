@@ -1,0 +1,11 @@
+- Have all and official standings
+- Send all the emails
+- Get all the problems
+- remove all unused tabs from contest page
+- Remove/restyle the model part from the drop down
+- Have a bottom bar for mobile for contests, problemsets, then profile
+- skip questions in contest
+- Adding a profile pic to my account
+- Automatic send to the next question
+- Having a button on mobile to go to the next and previous questions
+- Having a toast/feedback to tell the user a submission was sent

@@ -331,7 +331,9 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           bio: string | null
+          city: string | null
           contribution_rating: number
           country: string | null
           created_at: string
@@ -344,11 +346,15 @@ export type Database = {
           image_url: string | null
           last_name: string | null
           math_club: string | null
+          middle_name: string | null
+          phone_number: string | null
           ranking: string | null
           username: string | null
         }
         Insert: {
+          address?: string | null
           bio?: string | null
+          city?: string | null
           contribution_rating?: number
           country?: string | null
           created_at?: string
@@ -361,11 +367,15 @@ export type Database = {
           image_url?: string | null
           last_name?: string | null
           math_club?: string | null
+          middle_name?: string | null
+          phone_number?: string | null
           ranking?: string | null
           username?: string | null
         }
         Update: {
+          address?: string | null
           bio?: string | null
+          city?: string | null
           contribution_rating?: number
           country?: string | null
           created_at?: string
@@ -378,6 +388,8 @@ export type Database = {
           image_url?: string | null
           last_name?: string | null
           math_club?: string | null
+          middle_name?: string | null
+          phone_number?: string | null
           ranking?: string | null
           username?: string | null
         }

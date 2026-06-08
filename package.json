@@ -1,6 +1,11 @@
 {
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
-    "@supabase/supabase-js": "^2.87.2"
+    "@supabase/supabase-js": "^2.87.2",
+    "csv-parse": "^5.5.3",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "tsx": "^4.16.2"
   }
 }
