@@ -89,6 +89,8 @@ async function main() {
 
   const authUserMap = await buildAuthUserEmailMap();
 
+  const outputRows: { email: string; username: string; password: string }[] = [];
+
   let created = 0;
   let updated = 0;
   let skipped = 0;
@@ -122,7 +124,7 @@ async function main() {
       .maybeSingle();
 
     if (existingProfile) {
-      const { error: updateError } = await supabase
+      await supabase
         .from("profiles")
         .update({
           first_name: firstName,
@@ -138,13 +140,20 @@ async function main() {
         })
         .eq("id", existingProfile.id);
 
-      if (updateError) {
-        console.error(`Row ${i + 1}: Error updating ${email}:`, updateError.message);
+      const password = generatePassword();
+      const { error: pwdError } = await supabase.auth.admin.updateUserById(
+        existingProfile.id,
+        { password },
+      );
+
+      if (pwdError) {
+        console.error(`Row ${i + 1}: Error setting password for ${email}:`, pwdError.message);
         errors++;
       } else {
-        console.log(`Row ${i + 1}: Updated ${email}`);
+        console.log(`Row ${i + 1}: Updated ${email} password=${password}`);
         updated++;
       }
+      outputRows.push({ email, username, password: pwdError ? "" : password });
       continue;
     }
 
@@ -152,7 +161,7 @@ async function main() {
     const authUserId = authUserMap.get(email);
 
     if (authUserId) {
-      const { error: insertError } = await supabase.from("profiles").insert([
+      await supabase.from("profiles").insert([
         {
           id: authUserId,
           first_name: firstName,
@@ -168,13 +177,19 @@ async function main() {
         },
       ]);
 
-      if (insertError) {
-        console.error(`Row ${i + 1}: Error creating profile for ${email}:`, insertError.message);
+      const password = generatePassword();
+      const { error: pwdError } = await supabase.auth.admin.updateUserById(
+        authUserId,
+        { password },
+      );
+
+      if (pwdError) {
+        console.error(`Row ${i + 1}: Error setting password for ${email}:`, pwdError.message);
         errors++;
       } else {
-        console.log(`Row ${i + 1}: Created profile for existing auth user ${email}`);
-        created++;
+        console.log(`Row ${i + 1}: Set password for ${email} password=${password}`);
       }
+      outputRows.push({ email, username, password: pwdError ? "" : password });
     } else {
       const password = generatePassword();
       const { data: authData, error: authError } =
@@ -222,10 +237,18 @@ async function main() {
         console.log(`Row ${i + 1}: Created ${email} password=${password}`);
         created++;
       }
+      outputRows.push({ email, username, password });
     }
   }
 
-  console.log("\nDone!");
+  const outputPath = path.resolve(__dirname, "../data/credentials.csv");
+  const header = "email,username,password";
+  const lines = outputRows.map(
+    (r) => `${r.email},${r.username},${r.password}`,
+  );
+  fs.writeFileSync(outputPath, [header, ...lines].join("\n"), "utf-8");
+  console.log(`\nCredentials written to data/credentials.csv (${outputRows.length} rows)`);
+
   console.log(`Created: ${created}, Updated: ${updated}, Skipped: ${skipped}, Errors: ${errors}`);
 }
 
