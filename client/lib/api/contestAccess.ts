@@ -9,6 +9,7 @@ type ContestAccessInput = {
     mode?: string | null;
     start_date?: string | null;
     end_date?: string | null;
+    status?: string | null;
   };
   userId?: string | null;
   requireLiveWindow?: boolean;
@@ -22,6 +23,18 @@ export async function requireContestAccess({
   requireLiveWindow = false,
   allowEndedRead = true,
 }: ContestAccessInput) {
+  if (contest?.status === "private") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("type")
+      .eq("id", userId)
+      .single();
+    if (profile?.type !== "developer") {
+      return apiError("Contest not found", 404);
+    }
+    return null;
+  }
+
   const phase = getContestPhase(contest);
 
   if (phase === "practice") return null;

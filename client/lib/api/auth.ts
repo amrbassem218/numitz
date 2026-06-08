@@ -120,6 +120,22 @@ export function protectApiEndpoint(request: Request): Response | null {
 }
 
 /**
+ * Check if the current user is a developer
+ */
+export async function isDeveloper(supabase: any): Promise<boolean> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("type")
+    .eq("id", user.id)
+    .single();
+
+  return profile?.type === "developer";
+}
+
+/**
  * Public endpoint rate limiting (no auth required)
  */
 export function rateLimitPublic(request: Request): Response | null {

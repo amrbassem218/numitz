@@ -36,6 +36,7 @@ export interface Contest {
   mode?: ContestMode;
   contest_phase?: ContestPhase;
   server_time?: string;
+  status?: string;
   like: number;
   difficulty: number;
   authors_ids: null | string;
@@ -57,6 +58,7 @@ export interface UserProfile {
   username?: string;
   image?: string;
   bio?: string;
+  type?: string;
 }
 
 export interface FormattedDate {

@@ -98,6 +98,7 @@ export type Database = {
           number_of_registered: number | null
           problem_count: number | null
           start_date: string | null
+          status: string
           topics: string[] | null
         }
         Insert: {
@@ -114,6 +115,7 @@ export type Database = {
           number_of_registered?: number | null
           problem_count?: number | null
           start_date?: string | null
+          status?: string
           topics?: string[] | null
         }
         Update: {
@@ -130,6 +132,7 @@ export type Database = {
           number_of_registered?: number | null
           problem_count?: number | null
           start_date?: string | null
+          status?: string
           topics?: string[] | null
         }
         Relationships: []
@@ -349,6 +352,7 @@ export type Database = {
           middle_name: string | null
           phone_number: string | null
           ranking: string | null
+          type: string
           username: string | null
         }
         Insert: {
@@ -370,6 +374,7 @@ export type Database = {
           middle_name?: string | null
           phone_number?: string | null
           ranking?: string | null
+          type?: string
           username?: string | null
         }
         Update: {
@@ -391,6 +396,7 @@ export type Database = {
           middle_name?: string | null
           phone_number?: string | null
           ranking?: string | null
+          type?: string
           username?: string | null
         }
         Relationships: []

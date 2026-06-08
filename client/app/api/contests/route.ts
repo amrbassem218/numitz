@@ -1,6 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
-import { rateLimitPublic } from "@/lib/api/auth";
+import { rateLimitPublic, isDeveloper } from "@/lib/api/auth";
 import {
   json,
   apiError,
@@ -41,12 +41,20 @@ export async function GET(request: Request) {
   const { limit, pointer } = parsePaginationParams(request.url, 2);
 
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
+  const developer = await isDeveloper(supabase);
+
+  let query = supabase
     .from("contests")
     .select("*")
     .order("start_date", { ascending: false })
     .lte("start_date", (pointer ? new Date(pointer) : new Date()).toISOString())
     .limit(limit + 1);
+
+  if (!developer) {
+    query = query.eq("status", "public");
+  }
+
+  const { data, error } = await query;
 
   const err = handleSupabaseError(error, "contests");
   if (err) return err;
@@ -78,6 +86,7 @@ export async function POST(request: Request) {
     length_in_minutes: Number(body.length_in_minutes),
     problem_count: problems.length,
     mode: body.mode === "live" ? "live" : "practice",
+    status: body.status === "private" ? "private" : "public",
   };
 
   if (!contestPayload.name) return apiError("Contest name is required", 400);

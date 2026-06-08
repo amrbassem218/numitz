@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { rateLimitPublic } from "@/lib/api/auth";
+import { rateLimitPublic, isDeveloper } from "@/lib/api/auth";
 import {
   json,
   handleSupabaseError,
@@ -15,7 +15,9 @@ export async function GET(request: Request) {
   const now = new Date().toISOString();
 
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
+  const developer = await isDeveloper(supabase);
+
+  let query = supabase
     .from("contests")
     .select("*")
     .eq("mode", "live")
@@ -24,6 +26,12 @@ export async function GET(request: Request) {
     .order("start_date", { ascending: true })
     .order("id", { ascending: true })
     .range(offset, offset + limit);
+
+  if (!developer) {
+    query = query.eq("status", "public");
+  }
+
+  const { data, error } = await query;
 
   const err = handleSupabaseError(error, "live contests");
   if (err) return err;

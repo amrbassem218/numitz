@@ -1,6 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
-import { protectApiEndpoint, rateLimitPublic } from "@/lib/api/auth";
+import { protectApiEndpoint, rateLimitPublic, isDeveloper } from "@/lib/api/auth";
 import { json, apiError, handleSupabaseError } from "@/lib/api/response";
 import { getContestPhase, getContestMode } from "@/lib/contest";
 
@@ -22,6 +22,13 @@ export async function GET(
 
   const err = handleSupabaseError(error, "contest");
   if (err) return err;
+
+  if (data?.status === "private") {
+    const developer = await isDeveloper(supabase);
+    if (!developer) {
+      return apiError("Contest not found", 404);
+    }
+  }
 
   const serverNow = new Date();
 
@@ -46,6 +53,7 @@ export async function POST(request: Request) {
       {
         ...body,
         mode: body.mode === "live" ? "live" : "practice",
+        status: body.status === "private" ? "private" : "public",
       },
     ])
     .select()

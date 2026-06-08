@@ -119,6 +119,7 @@ const contestSchema = z
       .min(0, "Difficulty cannot be negative")
       .max(10000, "Difficulty is too high"),
     mode: z.enum(["practice", "live"]),
+    status: z.enum(["public", "private"]),
     start_date: z.date(),
     start_time: z.string(),
 
@@ -156,6 +157,7 @@ const CreateContest = ({}: Props) => {
       description: "",
       difficulty: 800,
       mode: "practice",
+      status: "public",
       start_date: new Date(),
       start_time: getFormattedDate(new Date()).timeFull,
 
@@ -337,6 +339,25 @@ const CreateContest = ({}: Props) => {
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="status"
+            control={form.control}
+            render={({ field }) => (
+              <Field>
+                <FieldLabel htmlFor="status">Contest Visibility</FieldLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger id="status" className="w-full">
+                    <SelectValue placeholder="Select visibility" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="public">Public</SelectItem>
+                    <SelectItem value="private">Private</SelectItem>
+                  </SelectContent>
+                </Select>
               </Field>
             )}
           />
