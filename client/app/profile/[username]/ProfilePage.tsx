@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { getRanking } from "@/lib/ranking";
 import { useProfile } from "@/app/store";
+import { useRouter } from "next/navigation";
 
 interface Props {
   profile: ProfileData;
@@ -21,6 +22,7 @@ interface Props {
 
 export function ProfilePage({ profile, blogs, ratingHistory, activity }: Props) {
   const ranking = getRanking(profile.elo_rating);
+  const router = useRouter();
   const signOut = useProfile((state) => state.signOut);
   const currentUser = useProfile((state) => state.userProfile);
 
@@ -49,7 +51,7 @@ export function ProfilePage({ profile, blogs, ratingHistory, activity }: Props) 
               <Button
                 variant="outline"
                 className="w-full py-6 text-base"
-                onClick={() => signOut()}
+                onClick={() => { signOut(); router.push("/"); }}
               >
                 Log out
               </Button>
