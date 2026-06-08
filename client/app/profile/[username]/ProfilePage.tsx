@@ -31,7 +31,7 @@ export function ProfilePage({ profile, blogs, ratingHistory, activity }: Props) 
       <div className="flex flex-col lg:flex-row gap-8">
         <aside className="w-full lg:w-80 shrink-0 flex flex-col gap-6">
           <div className="lg:sticky lg:top-24 space-y-6">
-            <InfoCard profile={profile} ranking={ranking} />
+            <InfoCard profile={profile} ranking={ranking} isOwnProfile={currentUser?.id === profile.id} />
             <Separator />
             <StatsList
               eloRating={profile.elo_rating}
