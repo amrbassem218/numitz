@@ -1,10 +1,10 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import { notFound } from "next/navigation";
 import { ProfilePage } from "./ProfilePage";
 import { ProfileData, BlogPost, RatingPoint, ActivityDay } from "@/types/types";
 
 async function getProfile(username: string) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseServiceClient();
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
@@ -14,7 +14,7 @@ async function getProfile(username: string) {
 }
 
 async function getBlogs(userId: string) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseServiceClient();
   const { data: blogs } = await supabase
     .from("blogs")
     .select("*")
@@ -25,7 +25,7 @@ async function getBlogs(userId: string) {
 }
 
 async function getRatingHistory(userId: string) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseServiceClient();
   const { data: history } = await supabase
     .from("rating_history")
     .select("*, contests(name)")
@@ -35,7 +35,7 @@ async function getRatingHistory(userId: string) {
 }
 
 async function getActivityData(userId: string) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseServiceClient();
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
   const { data: submissions } = await supabase

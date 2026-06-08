@@ -19,7 +19,7 @@ export function BlogsSection({ blogs }: Props) {
             <Link
               key={blog.id}
               href={`/blog/${blog.id}`}
-              className="shrink-0 w-56 p-4 rounded-xl border bg-card hover:bg-accent/50 transition-colors flex flex-col justify-between"
+              className="shrink-0 w-56 p-4 rounded-md border border-border/20 bg-transparent hover:bg-accent/20 transition-colors flex flex-col justify-between"
             >
               <h4 className="font-medium text-sm leading-snug line-clamp-2">
                 {blog.title}

@@ -55,7 +55,7 @@ export interface UserProfile {
   first_name?: string;
   last_name?: string;
   username?: string;
-  image?: string;
+  image_url?: string | null;
   bio?: string;
 }
 
@@ -150,7 +150,7 @@ export interface Standing {
   penalty?: number;
   profiles: {
     username: string;
-    // avatar: string;
+    image_url?: string | null;
   };
 }
 

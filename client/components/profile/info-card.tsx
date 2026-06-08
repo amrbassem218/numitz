@@ -17,10 +17,10 @@ export function InfoCard({ profile, ranking }: Props) {
   return (
     <div className="flex flex-col items-center lg:items-start gap-3">
       <Avatar className="w-24 h-24 lg:w-32 lg:h-32">
-        <AvatarImage src={profile.image_url ?? undefined} alt={profile.username} />
         <AvatarFallback className="text-2xl bg-primary">
           {profile.username.charAt(0).toUpperCase()}
         </AvatarFallback>
+        <AvatarImage src={profile.image_url ?? undefined} alt={profile.username} />
       </Avatar>
 
       <div className="text-center lg:text-left">

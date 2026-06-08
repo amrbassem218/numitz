@@ -54,8 +54,12 @@ const ContestStandings = ({ contestId }: Props) => {
             key={standing.id ?? index}
             className="flex items-center justify-between"
           >
-            <div>
-              {/* user's icon */}
+            <div className="flex items-center gap-2">
+              <img
+                src={standing?.profiles?.image_url ?? "/guest_user.svg"}
+                alt={standing?.profiles?.username ?? "?"}
+                className="w-6 h-6 rounded-full object-cover bg-muted"
+              />
               <span>{standing?.profiles?.username ?? "UNKOWN USER"}</span>
             </div>
             <div>

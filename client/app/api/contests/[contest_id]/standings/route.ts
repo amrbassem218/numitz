@@ -11,7 +11,7 @@ export async function GET(
 
   const { data, error } = await supabase
     .from("standings")
-    .select("*, profiles(username)");
+    .select("*, profiles(username, image_url)");
 
   const err = handleSupabaseError(error, "standings");
   if (err) return err;

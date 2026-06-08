@@ -54,15 +54,15 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 }
 
 export function RatingGraph({ data }: Props) {
-  if (data.length === 0) return null;
+  const hasData = data.length > 0;
 
-  const enriched = data.map((p, i) => ({
+  const enriched = hasData ? data.map((p, i) => ({
     ...p,
     _prevRating: i > 0 ? data[i - 1].rating : null,
-  }));
+  })) : [];
 
-  const minRating = Math.min(...data.map((p) => p.rating)) - 100;
-  const maxRating = Math.max(...data.map((p) => p.rating)) + 100;
+  const minRating = hasData ? Math.min(...data.map((p) => p.rating)) - 100 : 0;
+  const maxRating = hasData ? Math.max(...data.map((p) => p.rating)) + 100 : 2000;
 
   return (
     <Card>
@@ -86,14 +86,16 @@ export function RatingGraph({ data }: Props) {
                 tick={{ fontSize: 11 }}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Line
-                type="monotone"
-                dataKey="rating"
-                stroke="hsl(var(--primary))"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-                activeDot={{ r: 5 }}
-              />
+              {hasData && (
+                <Line
+                  type="monotone"
+                  dataKey="rating"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 5 }}
+                />
+              )}
             </LineChart>
           </ResponsiveContainer>
         </div>

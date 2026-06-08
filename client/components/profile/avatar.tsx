@@ -11,7 +11,7 @@ export function Avatar({ className, ...props }: AvatarProps) {
   return (
     <div
       className={cn(
-        "relative flex shrink-0 overflow-hidden rounded-full",
+        "relative shrink-0 overflow-hidden rounded-full",
         className
       )}
       {...props}
@@ -24,7 +24,7 @@ interface AvatarImageProps extends React.ComponentPropsWithoutRef<"img"> {
 }
 
 export function AvatarImage({ className, alt, ...props }: AvatarImageProps) {
-  return <img className={cn("aspect-square h-full w-full", className)} alt={alt ?? ""} {...props} />;
+  return <img className={cn("absolute inset-0 object-cover w-full h-full", className)} alt={alt ?? ""} {...props} />;
 }
 
 interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<"div"> {
@@ -35,7 +35,7 @@ export function AvatarFallback({ className, ...props }: AvatarFallbackProps) {
   return (
     <div
       className={cn(
-        "flex h-full w-full items-center justify-center rounded-full bg-muted",
+        "absolute inset-0 flex items-center justify-center rounded-full bg-muted",
         className
       )}
       {...props}
