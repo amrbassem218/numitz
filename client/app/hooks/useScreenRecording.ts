@@ -85,6 +85,7 @@ async function uploadChunk(
     }),
   );
 
+  console.log(`[recording] uploading ${type} chunk #${chunkIndex} (${(blob.size / 1024).toFixed(1)}KB)`);
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       const res = await fetch("/api/recordings/upload", {
@@ -92,7 +93,10 @@ async function uploadChunk(
         body: formData,
       });
 
-      if (res.ok) return;
+      if (res.ok) {
+        console.log(`[recording] upload OK ${type} chunk #${chunkIndex}`);
+        return;
+      }
 
       const text = await res.text();
       console.error(
@@ -138,12 +142,14 @@ function startRecorder(
   let chunkIndex = 0;
 
   recorder.ondataavailable = (event) => {
+    console.log(`[recording] dataavailable ${type} chunk #${chunkIndex} size=${event.data.size}`);
     if (event.data.size > 0) {
       const idx = chunkIndex++;
       uploadChunk(event.data, config, type, idx);
     }
   };
 
+  console.log(`[recording] started ${type} recorder (mime=${mimeType})`);
   recorder.start(CHUNK_INTERVAL_MS);
   return recorder;
 }
@@ -312,13 +318,18 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
     if (permissions.camera !== "granted") permissionsNeeded.push("camera");
     if (permissions.microphone !== "granted") permissionsNeeded.push("microphone");
 
+    console.log(`[recording] requestAll needed=${permissionsNeeded.join(",")} recordingConfig=${!!recordingConfig}`);
+    if (!recordingConfig) {
+      console.warn("[recording] No recordingConfig — skipping recorder setup");
+    }
+
     for (const type of permissionsNeeded) {
       const ok = await requestSingle(type);
       if (!ok) return false;
     }
 
     return true;
-  }, [requestSingle, permissions]);
+  }, [requestSingle, permissions, recordingConfig]);
 
   const dismissError = useCallback(() => {
     setError(null);

@@ -29,7 +29,8 @@ export async function POST(request: Request) {
 
     return json({ url: blob.url, pathname: blob.pathname });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
     console.error("Error uploading recording:", err);
-    return apiError("Failed to upload recording", 500);
+    return apiError(`Failed to upload recording: ${message}`, 500);
   }
 }
