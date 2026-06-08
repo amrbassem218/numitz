@@ -10,6 +10,7 @@ interface MediaPermissionsOverlayProps {
   errorPermission: MediaPermissionType | null;
   onRequestAll: () => Promise<boolean>;
   onDismissError: () => void;
+  requiredPermissions?: MediaPermissionType[];
 }
 
 const statusIcon: Record<MediaPermissionStatus, string> = {
@@ -45,6 +46,7 @@ const MediaPermissionsOverlay: React.FC<MediaPermissionsOverlayProps> = ({
   errorPermission,
   onRequestAll,
   onDismissError,
+  requiredPermissions = ["screen", "camera", "microphone"],
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -76,7 +78,9 @@ const MediaPermissionsOverlay: React.FC<MediaPermissionsOverlayProps> = ({
 
         {/* Permission list */}
         <div className="space-y-3 text-left">
-          {permissionLabels.map(({ key, icon, label, description }) => {
+          {permissionLabels
+            .filter((p) => requiredPermissions.includes(p.key))
+            .map(({ key, icon, label, description }) => {
             const status = permissions[key];
             const isErrored = errorPermission === key && !!error;
 

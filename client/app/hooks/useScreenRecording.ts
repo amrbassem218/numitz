@@ -35,6 +35,11 @@ interface RecordingConfig {
   userId: string;
 }
 
+function isScreenSharingSupported(): boolean {
+  return typeof navigator !== "undefined" &&
+    typeof navigator.mediaDevices?.getDisplayMedia === "function";
+}
+
 function mapDOMException(err: unknown, label: string): string {
   if (err instanceof DOMException) {
     if (
@@ -143,9 +148,11 @@ function startRecorder(
   return recorder;
 }
 
-export function useMediaPermissions(recordingConfig?: RecordingConfig | null): MediaPermissionsResult {
+export function useMediaPermissions(recordingConfig?: RecordingConfig | null): MediaPermissionsResult & { screenSharingSupported: boolean } {
+  const screenSupported = isScreenSharingSupported();
+
   const [permissions, setPermissions] = useState<MediaPermissionState>({
-    screen: "pending",
+    screen: screenSupported ? "pending" : "granted",
     camera: "pending",
     microphone: "pending",
   });
@@ -174,8 +181,12 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
         ref.current = null;
       }
     });
-    setPermissions({ screen: "pending", camera: "pending", microphone: "pending" });
-  }, []);
+    setPermissions({
+      screen: screenSupported ? "pending" : "granted",
+      camera: "pending",
+      microphone: "pending",
+    });
+  }, [screenSupported]);
 
   /** Request a single media type and return whether it was granted */
   const requestSingle = useCallback(
@@ -187,6 +198,11 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
 
       try {
         if (type === "screen") {
+          if (!isScreenSharingSupported()) {
+            setPermissions((prev) => ({ ...prev, screen: "granted" }));
+            return true;
+          }
+
           const screenStream = await navigator.mediaDevices.getDisplayMedia({
             video: {
               displaySurface: "monitor",
@@ -310,7 +326,7 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
   }, []);
 
   const allGranted =
-    permissions.screen === "granted" &&
+    (permissions.screen === "granted" || !screenSupported) &&
     permissions.camera === "granted" &&
     permissions.microphone === "granted";
 
@@ -329,5 +345,6 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
     requestAll,
     stopAll,
     dismissError,
+    screenSharingSupported: screenSupported,
   };
 }

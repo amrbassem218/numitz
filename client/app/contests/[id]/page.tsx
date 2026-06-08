@@ -28,7 +28,7 @@ import ScientificCalc from "@/components/Contest/scientificCalc";
 import ComingSoon from "@/components/comingSoon";
 import { getContestMode, getContestPhase } from "@/lib/contest";
 import MediaPermissionsOverlay from "@/components/Contest/ScreenRecordingOverlay";
-import { useMediaPermissions } from "@/app/hooks/useScreenRecording";
+import { useMediaPermissions, type MediaPermissionType } from "@/app/hooks/useScreenRecording";
 
 const bottomBarTabs = [
   {
@@ -65,7 +65,14 @@ export default function Page() {
     requestAll: requestAllMedia,
     stopAll: stopAllMedia,
     dismissError: dismissMediaError,
+    screenSharingSupported,
   } = useMediaPermissions(recordingConfig);
+
+  const requiredPermissions: MediaPermissionType[] = useMemo(() => {
+    return screenSharingSupported
+      ? ["screen", "camera", "microphone"]
+      : ["camera", "microphone"];
+  }, [screenSharingSupported]);
 
   const isLive = useMemo(() => {
     if (!contest) return false;
@@ -344,6 +351,7 @@ export default function Page() {
           errorPermission={mediaErrorPermission}
           onRequestAll={handleRequestMedia}
           onDismissError={dismissMediaError}
+          requiredPermissions={requiredPermissions}
         />
         {/* Show a minimal background while waiting */}
         <main className="h-screen! max-h-screen! max-w-full! px-1 flex flex-col py-1">
