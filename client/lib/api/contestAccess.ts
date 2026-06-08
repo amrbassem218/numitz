@@ -40,6 +40,16 @@ export async function requireContestAccess({
   if (phase === "practice") return null;
 
   if (phase === "upcoming") {
+    if (userId) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("type")
+        .eq("id", userId)
+        .single();
+      if (profile?.type === "developer") {
+        return null;
+      }
+    }
     return apiError("This live contest has not started yet", 403);
   }
 
@@ -53,16 +63,6 @@ export async function requireContestAccess({
   if (!userId) {
     return apiError("You must be signed in for this live contest", 401);
   }
-
-  const { data, error } = await supabase
-    .from("registered_in_contest")
-    .select("contest_id")
-    .eq("contest_id", contest.id)
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (error) return apiError(error.message, 500);
-  if (!data) return apiError("You must register for this live contest", 403);
 
   return null;
 }

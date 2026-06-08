@@ -44,6 +44,7 @@ export default function Page() {
   const contestParams = useSearchParams();
 
   const user = useProfile((state) => state.user);
+  const userProfile = useProfile((state) => state.userProfile);
 
   const [contest, setContest] = useState<Contest | null>(null);
 
@@ -156,18 +157,27 @@ export default function Page() {
   }, [contest_id]);
 
   useEffect(() => {
-    if (!contest || contestMode !== "live") return;
+    if (!contest) return;
+
+    if (contestMode === "live" && contestPhase === "upcoming" && userProfile?.type !== "developer") {
+      router.replace("/contests");
+      return;
+    }
 
     if (needsAuth && !user) {
       router.push("/sign_in");
     }
+  }, [contest, contestMode, contestPhase, needsAuth, user, userProfile, router]);
+
+  useEffect(() => {
+    if (!contest || contestMode !== "live") return;
 
     const intervalId = window.setInterval(() => {
       setNow(new Date());
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, [contest, contestMode, needsAuth, user, router]);
+  }, [contest, contestMode]);
 
   useEffect(() => {
     if (!contest || !canLoadContestProblems) return;
@@ -297,21 +307,24 @@ export default function Page() {
     return <ContestNotFound />;
   }
 
-  // For live upcoming contests, show a waiting state
+  // For live upcoming contests, show a waiting state (developers can bypass)
   if (contestMode === "live" && contestPhase === "upcoming") {
-    return (
-      <main className="h-[100svh] w-full flex flex-col overflow-hidden">
-        <ContestHeader contest={contest} />
-        <section className="flex flex-1 items-center justify-center rounded-sm bg-card">
-          <div className="max-w-md text-center space-y-2">
-            <h1 className="text-2xl font-bold">{contest.name}</h1>
-            <p className="text-muted-foreground">
-              This live contest has not started yet.
-            </p>
-          </div>
-        </section>
-      </main>
-    );
+    const isDeveloper = userProfile?.type === "developer";
+    if (!isDeveloper) {
+      return (
+        <main className="h-[100svh] w-full flex flex-col overflow-hidden">
+          <ContestHeader contest={contest} />
+          <section className="flex flex-1 items-center justify-center rounded-sm bg-card">
+            <div className="max-w-md text-center space-y-2">
+              <h1 className="text-2xl font-bold">{contest.name}</h1>
+              <p className="text-muted-foreground">
+                This live contest has not started yet.
+              </p>
+            </div>
+          </section>
+        </main>
+      );
+    }
   }
 
   if (isMobile) {

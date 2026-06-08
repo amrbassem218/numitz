@@ -12,6 +12,8 @@ type Props = {
 
 function ContestListing({ contest }: Props) {
   const phase = contest.contest_phase ?? getContestPhase(contest);
+  const startDate = contest.start_date ? new Date(contest.start_date) : null;
+  const isUpcoming = !!startDate && !isNaN(startDate.getTime()) && startDate > new Date();
   const thumbnailColor = contest.id.charCodeAt(0) % 2 === 0 ? "yellow" : "blue";
   const phaseLabel =
     phase === "live"
@@ -22,9 +24,8 @@ function ContestListing({ contest }: Props) {
           ? "Ended"
           : "Practice";
 
-  return (
-    <Link href={`/contests/${contest.id}`}>
-      <div className="flex items-center gap-3">
+  const content = (
+    <div className="flex items-center gap-3">
         {/* Contest thumbnail */}
         <div className="w-fit">
           {/* TODO: Add actual thumbnails or more options */}
@@ -61,7 +62,12 @@ function ContestListing({ contest }: Props) {
           </div>
         </div>
       </div>
-    </Link>
+  );
+
+  return isUpcoming ? (
+    <div className="cursor-default">{content}</div>
+  ) : (
+    <Link href={`/contests/${contest.id}`}>{content}</Link>
   );
 }
 
