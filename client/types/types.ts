@@ -78,7 +78,7 @@ export const defaultFormattedDate = {
   fullDate: "",
 };
 
-export type ProblemStatus = "success" | "failure" | "idle";
+export type ProblemStatus = "success" | "failure" | "pending" | "idle";
 
 export interface Submission {
   id?: string;

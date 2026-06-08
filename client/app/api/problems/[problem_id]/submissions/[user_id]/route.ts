@@ -87,13 +87,12 @@ export async function POST(
     }
   }
 
-  if (typeof problem.answer !== "string") {
-    return apiError("This problem cannot be graded yet", 422);
-  }
-
-  const status = isAcceptedAnswer(body.user_answer, problem.answer)
-    ? "success"
-    : "failure";
+  const status =
+    typeof problem.answer === "string"
+      ? isAcceptedAnswer(body.user_answer, problem.answer)
+        ? "success"
+        : "failure"
+      : "pending";
 
   const { data, error } = await supabase
     .from("submissions")
