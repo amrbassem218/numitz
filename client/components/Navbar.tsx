@@ -45,7 +45,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="hidden lg:flex items-center gap-4">
+      <div className="flex items-center gap-4">
         <ComingSoon>
           <button disabled>
             <Settings className="w-4 h-4" />
