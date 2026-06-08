@@ -17,20 +17,24 @@ interface Props {
 const UserIcon = ({ size = "md" }: Props) => {
   const signOut = useProfile((state) => state.signOut);
   const userProfile = useProfile((state) => state.userProfile);
-  
+
   const sizeClasses = {
     sm: "w-6 h-6 text-xs",
-    md: "w-8 h-8 text-sm", 
+    md: "w-8 h-8 text-sm",
     lg: "w-10 h-10 text-base",
   };
-  
+
   return (
     <div>
       {userProfile?.id ? (
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <div className={`${sizeClasses[size]} rounded-full bg-primary flex justify-center items-center uppercase text-white font-bold cursor-pointer`}>
-              <img src={"/guest_user.svg"} className="w-full h-full object-cover rounded-full" />
+            <div className={`${sizeClasses[size]} rounded-full bg-primary flex justify-center items-center uppercase text-white font-bold cursor-pointer overflow-hidden`}>
+              <img
+                src={userProfile.image_url ?? "/guest_user.svg"}
+                className="w-full h-full object-cover rounded-full"
+                alt={userProfile.username ?? ""}
+              />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
