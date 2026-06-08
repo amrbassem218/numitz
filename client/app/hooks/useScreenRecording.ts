@@ -236,9 +236,16 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
             return false;
           }
 
-          // If screen sharing stops, revoke all permissions
           videoTrack.onended = () => {
-            stopAll();
+            if (screenRecorderRef.current && screenRecorderRef.current.state !== "inactive") {
+              screenRecorderRef.current.stop();
+              screenRecorderRef.current = null;
+            }
+            if (screenStreamRef.current) {
+              screenStreamRef.current.getTracks().forEach((t) => t.stop());
+              screenStreamRef.current = null;
+            }
+            setPermissions((prev) => ({ ...prev, screen: "pending" }));
           };
 
           screenStreamRef.current = screenStream;
@@ -260,7 +267,15 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
 
           const videoTrack = cameraStream.getVideoTracks()[0];
           videoTrack.onended = () => {
-            stopAll();
+            if (cameraRecorderRef.current && cameraRecorderRef.current.state !== "inactive") {
+              cameraRecorderRef.current.stop();
+              cameraRecorderRef.current = null;
+            }
+            if (cameraStreamRef.current) {
+              cameraStreamRef.current.getTracks().forEach((t) => t.stop());
+              cameraStreamRef.current = null;
+            }
+            setPermissions((prev) => ({ ...prev, camera: "pending" }));
           };
 
           cameraStreamRef.current = cameraStream;
@@ -279,7 +294,15 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
 
           const audioTrack = micStream.getAudioTracks()[0];
           audioTrack.onended = () => {
-            stopAll();
+            if (micRecorderRef.current && micRecorderRef.current.state !== "inactive") {
+              micRecorderRef.current.stop();
+              micRecorderRef.current = null;
+            }
+            if (micStreamRef.current) {
+              micStreamRef.current.getTracks().forEach((t) => t.stop());
+              micStreamRef.current = null;
+            }
+            setPermissions((prev) => ({ ...prev, microphone: "pending" }));
           };
 
           micStreamRef.current = micStream;
@@ -305,7 +328,7 @@ export function useMediaPermissions(recordingConfig?: RecordingConfig | null): M
         return false;
       }
     },
-    [stopAll, recordingConfig],
+    [recordingConfig],
   );
 
   const requestAll = useCallback(async (): Promise<boolean> => {

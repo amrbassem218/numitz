@@ -53,9 +53,10 @@ export default function Page() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const recordingConfig = user?.id
-    ? { contestId: contest_id as string, userId: user.id }
-    : null;
+  const recordingConfig = useMemo(
+    () => (user?.id ? { contestId: contest_id as string, userId: user.id } : null),
+    [user?.id, contest_id],
+  );
 
   const {
     permissions: mediaPermissions,
@@ -94,8 +95,8 @@ export default function Page() {
   const needsAuth = contestMode === "live" && contestPhase === "live";
 
   const handleRequestMedia = useCallback(async () => {
-    const success = await requestAllMedia();
     setHasAttemptedPermissions(true);
+    const success = await requestAllMedia();
     return success;
   }, [requestAllMedia]);
 
