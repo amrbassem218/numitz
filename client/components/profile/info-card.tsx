@@ -9,9 +9,10 @@ import { useState } from "react";
 interface Props {
   profile: ProfileData;
   ranking: Ranking;
+  isOwnProfile?: boolean;
 }
 
-export function InfoCard({ profile, ranking }: Props) {
+export function InfoCard({ profile, ranking, isOwnProfile }: Props) {
   const [isFollowing, setIsFollowing] = useState(false);
 
   return (
@@ -32,13 +33,15 @@ export function InfoCard({ profile, ranking }: Props) {
         </p>
       </div>
 
-      <Button
-        variant={isFollowing ? "outline" : "default"}
-        className="w-full"
-        onClick={() => setIsFollowing(!isFollowing)}
-      >
-        {isFollowing ? "Following" : "Follow"}
-      </Button>
+      {!isOwnProfile && (
+        <Button
+          variant={isFollowing ? "outline" : "default"}
+          className="w-full"
+          onClick={() => setIsFollowing(!isFollowing)}
+        >
+          {isFollowing ? "Following" : "Follow"}
+        </Button>
+      )}
 
       {profile.bio && (
         <p className="text-sm text-muted-foreground text-center lg:text-left">
