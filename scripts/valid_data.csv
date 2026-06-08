@@ -142,7 +142,7 @@ What is the product of all real numbers $x$ such that the distance on the number
 What is the value of \[(\log 5)^{3}+(\log 20)^{3}+(\log 8)(\log 0.25)\] where $\log$ denotes the base-ten logarithm?,2.0
 "The roots of the polynomial $10x^3 - 39x^2 + 29x - 6$ are the height, length, and width of a rectangular box (right rectangular prism). A new rectangular box is formed by lengthening each edge of the original box by $2$
 units. What is the volume of the new box?",30.0
-"A $\emph{triangular number}$ is a positive integer that can be expressed in the form $t_n = 1+2+3+\cdots+n$, for some positive integer $n$. The three smallest triangular numbers that are also perfect squares are
+"A $\textit{triangular number}$ is a positive integer that can be expressed in the form $t_n = 1+2+3+\cdots+n$, for some positive integer $n$. The three smallest triangular numbers that are also perfect squares are
 $t_1 = 1 = 1^2$, $t_8 = 36 = 6^2$, and $t_{49} = 1225 = 35^2$. What is the sum of the digits of the fourth smallest triangular number that is also a perfect square?",18.0
 "Suppose $a$ is a real number such that the equation \[a\cdot(\sin{x}+\sin{(2x)}) = \sin{(3x)}\]
 has more than one solution in the interval $(0, \pi)$. The set of all such $a$ that can be written
@@ -4309,7 +4309,7 @@ $12^{\mathrm{th}}$ grade & $11.6\%$ & $8.6\%$ \\ \hline
 "Mary and Jenna are playing a game in which each girl rolls a twenty-sided die with numbers from 1 to 20 on the faces.  If the number on the die that Mary rolls is a factor of the number on the die that Jenna rolls, Mary wins.  If the number on the die that Jenna rolls is a factor of the number on the die that Mary rolls, Jenna wins.  For how many possible rolls would both girls win?",20
 Give the greatest common divisor of $6^3$ and $3^6$.,27
 "If $2004$ is split after the third digit into a three-digit integer  and a one-digit integer, then the two integers, $200$ and $4$, have  a common factor greater than one.  The years $2005$ and $2006$  each have this same property, too.  What is the first    odd-numbered year after $2006$ that has this property?",2013
-How many interior diagonals does a regular nine-sided polygon have?  (An $\emph{interior diagonal }$ is a segment connecting two vertices which do not have an edge between them.),27
+How many interior diagonals does a regular nine-sided polygon have?  (An $\textit{interior diagonal }$ is a segment connecting two vertices which do not have an edge between them.),27
 "In the diagram, what is the perimeter of $\triangle PQS$? [asy]
 size(5cm);
 import olympiad;
