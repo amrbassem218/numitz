@@ -27,6 +27,7 @@ export async function POST(request: Request) {
       addRandomSuffix: false,
     });
 
+    console.log(`[upload] blob stored at ${blob.url} (pathname: ${blob.pathname})`);
     return json({ url: blob.url, pathname: blob.pathname });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
