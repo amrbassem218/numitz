@@ -222,6 +222,7 @@ export type UserRanking = {
   title_short: Ranking_title_short;
   rating: number;
   contests_entered_count: number;
+  contest_score?: number;
 };
 
 export const rankingsList: Ranking[] = [

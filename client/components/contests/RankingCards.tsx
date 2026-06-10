@@ -20,16 +20,24 @@ function RankingCards({ userRankingData }: Props) {
           <span className={ranking.color}>{userRankingData.username}</span>
         </div>
         <div className="h-full text-sm px-2 w-30 absolute right-0 top-0  border-l-1 border-l-border/10 flex flex-col gap-2 justify-center">
-          <span className="text-muted-foreground">
-            Rating: <span className="text-text"> {userRankingData.rating}</span>
-          </span>
-          <span className="text-muted-foreground">
-            Entered:{" "}
-            <span className="text-text">
-              {" "}
-              {userRankingData.contests_entered_count}
+          {userRankingData.contest_score !== undefined ? (
+            <span className="text-muted-foreground">
+              Score: <span className="text-text">{userRankingData.contest_score}</span>
             </span>
-          </span>
+          ) : (
+            <>
+              <span className="text-muted-foreground">
+                Rating: <span className="text-text"> {userRankingData.rating}</span>
+              </span>
+              <span className="text-muted-foreground">
+                Entered:{" "}
+                <span className="text-text">
+                  {" "}
+                  {userRankingData.contests_entered_count}
+                </span>
+              </span>
+            </>
+          )}
         </div>
       </Card>
     </div>
