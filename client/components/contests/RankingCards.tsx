@@ -12,7 +12,7 @@ function RankingCards({ userRankingData }: Props) {
   )[0];
   return (
     <div>
-      <Card className="px-5 py-4 w-90 max-w-full flex items-center relative flex-row justify-between border-border/10">
+      <Card className="px-3 py-3 w-full max-w-full flex items-center relative flex-row justify-between border-border/10">
         <div className="space-x-4">
           <span className="text-lg font-bold">
             {userRankingData.ranking_num}

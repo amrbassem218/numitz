@@ -25,7 +25,10 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const hasAuthCookie = request.cookies.getAll().some(c => c.name.startsWith("sb-"));
+  if (hasAuthCookie) {
+    await supabase.auth.getUser();
+  }
 
   return supabaseResponse;
 }
